@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://demos/bomber/Terrain/translate.gd" type="Script" id=1]
+[ext_resource path="res://demos/bomber/Manager/RuleManager.tres" type="Resource" id=2]
+
+[sub_resource type="LineShape2D" id=2]
+
+[node name="Terrain" type="Node2D"]
+
+[node name="KOZone" type="Area2D" parent="." groups=["KO"]]
+position = Vector2( -33, 892 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KOZone"]
+shape = SubResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="KOZone"]
+margin_left = -3866.0
+margin_right = 3906.0
+margin_bottom = 1598.0
+color = Color( 0.309804, 0.368627, 1, 0.576471 )
+
+[node name="Start" type="Position2D" parent="."]
+position = Vector2( 0, 303 )
+
+[node name="End" type="Position2D" parent="."]
+position = Vector2( 0, 92 )
+
+[node name="Tween" type="Tween" parent="."]
+script = ExtResource( 1 )
+start_position = NodePath("../Start")
+end_position = NodePath("../End")
+target = NodePath("../KOZone")
+RuleManager = ExtResource( 2 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2( 0, 174 )
+polygon = PoolVector2Array( -432, -38, -208, -75, 456, -77, 898, 13, 893, 112, 456, 9, -206, 29, -428, 76 )
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D2"]
+position = Vector2( -81, -122 )
+polygon = PoolVector2Array( -401, -156, -273, -233, -8, -183, 161, -109, 157, 39, -4, 42, -294, 49, -415, 5 )

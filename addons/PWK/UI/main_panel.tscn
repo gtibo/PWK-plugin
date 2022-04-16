@@ -1,0 +1,41 @@
+[gd_scene format=2]
+
+[node name="CenterContainer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+tab_align = 0
+drag_to_rearrange_enabled = true
+
+[node name="Puppet Editor" type="Control" parent="TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="River" type="GraphEdit" parent="TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="Home" type="ScrollContainer" parent="TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="Home" type="Control" parent="TabContainer/Home"]

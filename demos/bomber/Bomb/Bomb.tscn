@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://demos/bomber/Bomb/Bomb.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://demos/bomber/Manager/RuleManager.tres" type="Resource" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 23.0217
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 28.0713
+
+[node name="Bomb" type="KinematicBody2D"]
+collision_mask = 2
+script = ExtResource( 1 )
+RuleManager = ExtResource( 3 )
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="HitBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.484375, 0.484375 )
+texture = ExtResource( 2 )
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -1,0 +1,109 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://demos/bomber/Player/player.gd" type="Script" id=1]
+[ext_resource path="res://addons/PWK/nodes/StateMachine/StateMachine.gd" type="Script" id=2]
+[ext_resource path="res://demos/bomber/Player/States/Idle.gd" type="Script" id=3]
+[ext_resource path="res://demos/bomber/Player/States/Run.gd" type="Script" id=4]
+[ext_resource path="res://demos/bomber/Player/States/Slide.gd" type="Script" id=5]
+[ext_resource path="res://demos/bomber/Player/States/Air.gd" type="Script" id=6]
+[ext_resource path="res://demos/bomber/Player/States/Dance.gd" type="Script" id=7]
+[ext_resource path="res://demos/bomber/Player/States/KO.gd" type="Script" id=8]
+[ext_resource path="res://demos/bomber/Player/Punch.tscn" type="PackedScene" id=9]
+[ext_resource path="res://demos/bomber/Player/States/Stunned.gd" type="Script" id=10]
+[ext_resource path="res://demos/bomber/Manager/RuleManager.tres" type="Resource" id=11]
+[ext_resource path="res://demos/bomber/Player/States/Throw.gd" type="Script" id=12]
+[ext_resource path="res://demos/bomber/Bomb/Bomb.tscn" type="PackedScene" id=13]
+[ext_resource path="res://demos/bomber/Player/sprites/monkey_run.png" type="Texture" id=14]
+[ext_resource path="res://demos/bomber/Player/sprites/monkey_jump.png" type="Texture" id=15]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 31, 38 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 36.1248
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 15 ) ],
+"loop": true,
+"name": "Jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ) ],
+"loop": true,
+"name": "Run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+} ]
+
+[node name="Player" type="KinematicBody2D"]
+collision_mask = 2
+script = ExtResource( 1 )
+punch_timer = NodePath("Punch_timer")
+bomb_timer = NodePath("Bomb_timer")
+RuleManager = ExtResource( 11 )
+punch_scene = ExtResource( 9 )
+bomb_scene = ExtResource( 13 )
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 2 )
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 3 )
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource( 4 )
+
+[node name="Air" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+
+[node name="Slide" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
+[node name="Stunned" type="Node" parent="StateMachine"]
+script = ExtResource( 10 )
+stun_timer = NodePath("../../Stun_timer")
+
+[node name="KO" type="Node" parent="StateMachine"]
+script = ExtResource( 8 )
+
+[node name="Dance" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="Throw" type="Node" parent="StateMachine"]
+script = ExtResource( 12 )
+
+[node name="HitBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource( 2 )
+
+[node name="Stun_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Punch_timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Bomb_timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+modulate = Color( 1, 0.482353, 0.172549, 1 )
+scale = Vector2( 0.136223, 0.136223 )
+frames = SubResource( 3 )
+animation = "Idle"
+playing = true
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
+[connection signal="timeout" from="Punch_timer" to="." method="_on_Punch_timer_timeout"]
+[connection signal="timeout" from="Bomb_timer" to="." method="_on_Bomb_timer_timeout"]
