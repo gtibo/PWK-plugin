@@ -49,10 +49,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/PWK/nodes/StateMachine/StateMachine.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "TopDownMouseController",
+"language": "GDScript",
+"path": "res://addons/PWK/nodes/controllers/TopDownMouse/TopDownMouseController.gd"
+}, {
 "base": "Resource",
 "class": "bomber_rule_manager",
 "language": "GDScript",
 "path": "res://demos/bomber/Manager/RuleManagerBuilder.gd"
+}, {
+"base": "Resource",
+"class": "bomber_theme",
+"language": "GDScript",
+"path": "res://demos/bomber/Manager/CharaThemebuilder.gd"
 }, {
 "base": "Camera2D",
 "class": "cameraFollow",
@@ -68,17 +78,24 @@ _global_script_class_icons={
 "PlatformerStateRun": "",
 "State": "res://addons/PWK/icones/State_icon.svg",
 "StateMachine": "res://addons/PWK/icones/StateMachine_icon.svg",
+"TopDownMouseController": "res://addons/PWK/icones/joystick_icon.svg",
 "bomber_rule_manager": "",
+"bomber_theme": "",
 "cameraFollow": ""
 }
 
 [application]
 
 config/name="Possible World Kit"
+run/main_scene="res://demos/bomber/Main.tscn"
 boot_splash/image="res://splash.png"
 boot_splash/fullsize=false
 boot_splash/bg_color=Color( 0.0509804, 0.0509804, 0.054902, 1 )
 config/icon="res://icon.png"
+
+[display]
+
+window/size/fullscreen=true
 
 [editor_plugins]
 
@@ -99,4 +116,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/filters/msaa=3
+quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"

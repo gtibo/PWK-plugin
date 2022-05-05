@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/monkey_run.png-e422eb3e61cc4fbe1edd2168eeb895ae.stex"
+path="res://.import/1650920945303-731846132.png-003bc68866543be2f4723cddbcf397dd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://demos/bomber/Player/sprites/monkey_run.png"
-dest_files=[ "res://.import/monkey_run.png-e422eb3e61cc4fbe1edd2168eeb895ae.stex" ]
+source_file="res://demos/bomber/1650920945303-731846132.png"
+dest_files=[ "res://.import/1650920945303-731846132.png-003bc68866543be2f4723cddbcf397dd.stex" ]
 
 [params]
 

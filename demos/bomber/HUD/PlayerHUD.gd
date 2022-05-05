@@ -5,6 +5,9 @@ onready var actions = {
 	"can_throw_bomb": $BombIcon
 }
 
+func set_theme(t):
+	$PortraitIcon.modulate = t.fill
+
 func set_action(action_name, value):
 	if !actions.has(action_name): return
 	actions[action_name].set_state(value)

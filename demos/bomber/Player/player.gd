@@ -6,14 +6,17 @@ export(Resource) var RuleManager
 export(PackedScene) var punch_scene
 export(PackedScene) var bomb_scene
 
-onready var sprite = $Sprite
-
 var punch_button
 var bomb_button
 var run_button
 
 var can_throw_bomb = true
 var can_punch = true
+
+signal changeDirection
+signal punch
+
+var direction = 0
 
 func setup(spawn_pos = null, ctrl_index = null):
 	if spawn_pos:
@@ -26,13 +29,13 @@ func set_controller_index(ctrl_index):
 	punch_button = str(controller_index) + "_b_button"
 	bomb_button = str(controller_index) + "_x_button"
 	run_button = str(controller_index) + "_r2_button"
-
+	
+	$TextureRect.material = $TextureRect.material.duplicate()
+	$TextureRect.material.set_shader_param("Contour", RuleManager.themes[ctrl_index].contour)
+	$TextureRect.material.set_shader_param("Main", RuleManager.themes[ctrl_index].fill)
+	
 func _ready():
 	RuleManager.connect("victory", self, "on_victory")
-
-func _physics_process(delta):
-	if x_input != 0:
-		sprite.flip_h = x_input > 0
 
 func get_speed_boost():
 	return 1
@@ -40,6 +43,9 @@ func get_speed_boost():
 	
 func apply_x_inputs(delta):
 	if x_input == 0: return
+	if x_input != direction:
+		direction = x_input
+		emit_signal("changeDirection", direction)
 	velocity.x = lerp(velocity.x, x_input * (SPEED * get_speed_boost()), acceleration * delta)
 	
 func check_punch():
@@ -48,7 +54,7 @@ func check_punch():
 		can_punch = false
 		RuleManager.request_punch(self)
 		punch_timer.start()
-
+		emit_signal("punch")
 func check_throw():
 	if Input.is_action_pressed(bomb_button) && can_throw_bomb:
 		$StateMachine.transition_to("Throw")

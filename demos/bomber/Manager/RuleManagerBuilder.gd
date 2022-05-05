@@ -14,6 +14,8 @@ signal explosion
 
 signal action_update
 
+export (Array, Resource) var themes = []
+
 func request_punch(player):
 	emit_signal("punch", player)
 	

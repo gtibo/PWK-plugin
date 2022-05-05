@@ -12,7 +12,7 @@ func setup(spawn_power = null, spawn_pos = null, spawn_vel = null):
 		velocity = spawn_vel * TOP_SPEED
 	if spawn_power:
 		$Timer.wait_time = 1 + spawn_power * 2
-		scale = Vector2(spawn_power,spawn_power)
+		#scale = Vector2(spawn_power,spawn_power)
 
 func _ready():
 	$Timer.start()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://demos/bomber/cameraFollow.gd" type="Script" id=1]
 [ext_resource path="res://demos/bomber/InGame/HUDManager.gd" type="Script" id=2]
@@ -11,14 +11,25 @@
 [ext_resource path="res://demos/bomber/Bomb/Bomb.tscn" type="PackedScene" id=9]
 [ext_resource path="res://demos/bomber/Player/Punch.tscn" type="PackedScene" id=10]
 [ext_resource path="res://demos/bomber/HUD/PlayerHUD.tscn" type="PackedScene" id=11]
-[ext_resource path="res://demos/bomber/bg_0.png" type="Texture" id=12]
-[ext_resource path="res://demos/bomber/bg_2.png" type="Texture" id=13]
-[ext_resource path="res://demos/bomber/bg_1.png" type="Texture" id=14]
+[ext_resource path="res://demos/bomber/island_2.png" type="Texture" id=12]
+[ext_resource path="res://demos/bomber/island_3.png" type="Texture" id=13]
+[ext_resource path="res://demos/bomber/island_1.png" type="Texture" id=14]
+[ext_resource path="res://demos/bomber/water_texture.png" type="Texture" id=15]
+[ext_resource path="res://demos/bomber/Bomb/ExplosionVFX.tscn" type="PackedScene" id=16]
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 159, 51.5 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 60.5, 132 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 238, 79 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 234.5, 40.5 )
 
 [sub_resource type="LineShape2D" id=1]
-
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 176, 54 )
 
 [node name="InGame" type="Node2D"]
 script = ExtResource( 5 )
@@ -27,29 +38,9 @@ player_scene = ExtResource( 3 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
-[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.7, 0.7 )
-
-[node name="Bg0" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
-position = Vector2( 0, -167 )
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.8, 0.8 )
-
-[node name="Bg1" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
-position = Vector2( 0, -125 )
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 14 )
-
-[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.98, 0.98 )
-
-[node name="Bg2" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
-position = Vector2( 0, -167 )
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 13 )
+[node name="ColorRect" type="ColorRect" parent="ParallaxBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="Overlay" type="CanvasLayer" parent="."]
 
@@ -64,26 +55,216 @@ RuleManager = ExtResource( 6 )
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -20.0
+margin_top = 43.0
 margin_right = 20.0
-margin_bottom = 40.0
+margin_bottom = 83.0
 grow_horizontal = 2
 alignment = 1
 
 [node name="Spawns" type="Node2D" parent="."]
 
 [node name="1" type="Position2D" parent="Spawns"]
-position = Vector2( 796, -825 )
+position = Vector2( 1332, -882 )
 
 [node name="2" type="Position2D" parent="Spawns"]
-position = Vector2( -764, -530 )
+position = Vector2( -1004, -875 )
 
 [node name="3" type="Position2D" parent="Spawns"]
-position = Vector2( 711, -215 )
+position = Vector2( 933, -251 )
 
 [node name="4" type="Position2D" parent="Spawns"]
-position = Vector2( -653, -507 )
+position = Vector2( -12, -64 )
 
 [node name="Terrain" type="Node2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Ground" type="Node2D" parent="Terrain"]
+
+[node name="StaticBody2D12" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -941, -181 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D12"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D12"]
+position = Vector2( 2, 92.5 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D12"]
+position = Vector2( 100.5, 12 )
+shape = SubResource( 6 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -1013, -682 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 14 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D"]
+position = Vector2( 10, 19 )
+shape = SubResource( 3 )
+
+[node name="StaticBody2D10" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 322, -1233 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D10"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 14 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D10"]
+position = Vector2( 10, 19 )
+shape = SubResource( 3 )
+
+[node name="StaticBody2D11" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -882, -21 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D11"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 14 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D11"]
+position = Vector2( 10, 19 )
+shape = SubResource( 3 )
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -154, 98 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D2"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D2"]
+position = Vector2( 6.5, 23.5 )
+shape = SubResource( 4 )
+
+[node name="StaticBody2D5" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 1370, -797 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D5"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D5"]
+position = Vector2( 6.5, 23.5 )
+shape = SubResource( 4 )
+
+[node name="StaticBody2D9" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -286, -961 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D9"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D9"]
+position = Vector2( 6.5, 23.5 )
+shape = SubResource( 4 )
+
+[node name="StaticBody2D6" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 752, -233 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D6"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D6"]
+position = Vector2( 6.5, 23.5 )
+shape = SubResource( 4 )
+
+[node name="StaticBody2D7" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 30, -263 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D7"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D7"]
+position = Vector2( 6.5, 23.5 )
+shape = SubResource( 4 )
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 356, 15 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D3"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D3"]
+position = Vector2( 2, 92.5 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D3"]
+position = Vector2( 100.5, 12 )
+shape = SubResource( 6 )
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( -403, -440 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D4"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D4"]
+position = Vector2( 2, 92.5 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D4"]
+position = Vector2( 100.5, 12 )
+shape = SubResource( 6 )
+
+[node name="StaticBody2D8" type="StaticBody2D" parent="Terrain/Ground"]
+position = Vector2( 844, -785 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D8"]
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D8"]
+position = Vector2( 2, 92.5 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D8"]
+position = Vector2( 100.5, 12 )
+shape = SubResource( 6 )
 
 [node name="KOZone" type="Area2D" parent="Terrain" groups=["KO"]]
 position = Vector2( -33, 892 )
@@ -94,11 +275,12 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/KOZone"]
 shape = SubResource( 1 )
 
-[node name="ColorRect" type="ColorRect" parent="Terrain/KOZone"]
+[node name="ColorRect" type="TextureRect" parent="Terrain/KOZone"]
 margin_left = -3866.0
 margin_right = 3906.0
 margin_bottom = 1598.0
-color = Color( 0.309804, 0.368627, 1, 0.576471 )
+texture = ExtResource( 15 )
+stretch_mode = 2
 
 [node name="Start" type="Position2D" parent="Terrain"]
 position = Vector2( 0, 303 )
@@ -113,118 +295,11 @@ end_position = NodePath("../End")
 target = NodePath("../KOZone")
 RuleManager = ExtResource( 6 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Terrain"]
-position = Vector2( -51, 103 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D2" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 297, 59 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D2"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D3" type="StaticBody2D" parent="Terrain"]
-position = Vector2( -146, -152 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D3"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D4" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 519, -13 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D4"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D5" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 631, -104 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D5"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D6" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 30, -237 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D6"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D7" type="StaticBody2D" parent="Terrain"]
-position = Vector2( -427, -346 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D7"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D8" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 326, -517 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D8"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D9" type="StaticBody2D" parent="Terrain"]
-position = Vector2( -106, -618 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D9"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D10" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 780, -717 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D10"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D11" type="StaticBody2D" parent="Terrain"]
-position = Vector2( 158, -570 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D11"]
-shape = SubResource( 2 )
-
-[node name="StaticBody2D12" type="StaticBody2D" parent="Terrain"]
-position = Vector2( -696, -420 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/StaticBody2D12"]
-shape = SubResource( 2 )
-
 [node name="HitsManager" type="Node2D" parent="."]
 script = ExtResource( 8 )
 RuleManager = ExtResource( 6 )
 explosion_scene = ExtResource( 7 )
+explosion_vfx_scene = ExtResource( 16 )
 bomb_scene = ExtResource( 9 )
 punch_scene = ExtResource( 10 )
 
@@ -233,6 +308,4 @@ punch_scene = ExtResource( 10 )
 [node name="cameraFollow" type="Camera2D" parent="."]
 current = true
 script = ExtResource( 1 )
-min_zoom = 1.0
-max_zoom = 4
 RuleManager = ExtResource( 6 )

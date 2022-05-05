@@ -12,6 +12,7 @@ func _ready():
 	RuleManager.player_info = []
 	for i in range(4):
 		var pm = PlayerMarker.instance()
+		pm.set_theme(RuleManager.themes[i])
 		$MenuScreen/HBoxContainer.add_child(pm)
 		pm.hide()
 		var t = pm.ready_timer
@@ -24,7 +25,7 @@ func player_joined(i):
 		RuleManager.add_player_info(i)
 	timers[i].ready_timer.start()
 	timers[i].show()
-	timers[i].set_label("Not ready...")
+	timers[i].set_label(.2)
 	
 func player_left(i):
 	if RuleManager.has_player_info(i):
@@ -32,7 +33,7 @@ func player_left(i):
 	timers[i].hide()
 	
 func player_ready(i):
-	timers[i].set_label("Ready!")
+	timers[i].set_label(1)
 	if !player_ready.has(i):
 		player_ready.append(i)
 	if player_ready.size() >= 2 && player_ready.size() == RuleManager.player_info.size():
@@ -41,7 +42,7 @@ func player_ready(i):
 
 func player_not_ready(i):
 	timers[i].ready_timer.stop()
-	timers[i].set_label("Not ready...")
+	timers[i].set_label(.2)
 	if player_ready.has(i):
 		player_ready.erase(i)
 

@@ -3,6 +3,7 @@ export(Resource) var RuleManager
 # Listen Rules Manager and spawns explosions and hits
 
 export(PackedScene) var explosion_scene
+export(PackedScene) var explosion_vfx_scene
 export(PackedScene) var bomb_scene
 export(PackedScene) var punch_scene
 
@@ -25,3 +26,6 @@ func on_explosion(explostion_position):
 	var zone = explosion_scene.instance()
 	zone._init(self, explostion_position)
 	add_child(zone)
+	var explo = explosion_vfx_scene.instance()
+	explo.position = explostion_position
+	add_child(explo)

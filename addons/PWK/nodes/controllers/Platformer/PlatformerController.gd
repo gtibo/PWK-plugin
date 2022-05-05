@@ -14,7 +14,6 @@ var jump_button
 var left_button
 var right_button
 
-
 func set_controller_index(value):
 	controller_index = value
 	jump_button = str(controller_index) + "_a_button"

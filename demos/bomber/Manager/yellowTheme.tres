@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://demos/bomber/Manager/CharaThemebuilder.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+contour = Color( 0.643137, 0.168627, 0.0235294, 1 )
+fill = Color( 1, 0.913725, 0.203922, 1 )
