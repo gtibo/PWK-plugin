@@ -1,0 +1,41 @@
+[gd_resource type="Resource" load_steps=13 format=2]
+
+[ext_resource path="res://addons/PWK/Dialogue/dialogue_data_builder.gd" type="Script" id=1]
+[ext_resource path="res://addons/PWK/Dialogue/blocks/dialogue_line_block_builder.gd" type="Script" id=2]
+[ext_resource path="res://addons/PWK/Dialogue/demo/actors/beeActor.tres" type="Resource" id=3]
+[ext_resource path="res://addons/PWK/Dialogue/demo/actors/boActor.tres" type="Resource" id=4]
+[ext_resource path="res://addons/PWK/Dialogue/blocks/dialogue_choice_block_builder.gd" type="Script" id=5]
+[ext_resource path="res://addons/PWK/Dialogue/demo/dialogues/explaination_dialogue.tres" type="Resource" id=6]
+[ext_resource path="res://addons/PWK/Dialogue/demo/dialogues/decline_dialogue.tres" type="Resource" id=7]
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 5 )
+dialogue_target = ExtResource( 7 )
+title = "No Thansk..."
+
+[sub_resource type="Resource" id=5]
+script = ExtResource( 5 )
+dialogue_target = ExtResource( 6 )
+title = "Yes!"
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+actor = ExtResource( 4 )
+line = "I'm Bo, and I love running!!!
+This is my friend Bee."
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+actor = ExtResource( 3 )
+line = "I'm Bee!
+Even if Bo is afar, I can still hear her!"
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 2 )
+actor = ExtResource( 3 )
+line = "What a nice day"
+
+[resource]
+script = ExtResource( 1 )
+lines = [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ) ]
+choices = [ SubResource( 4 ), SubResource( 5 ) ]

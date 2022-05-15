@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/theme.mp3-87985517e957c45b5cf149af7f4ec349.mp3str"
+
+[deps]
+
+source_file="res://demos/adventure/sounds/soundtrack/theme.mp3"
+dest_files=[ "res://.import/theme.mp3-87985517e957c45b5cf149af7f4ec349.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/step-04.wav-727298df915f6984e4d0680a2516ec1f.sample"
+
+[deps]
+
+source_file="res://demos/adventure/sounds/footsteps/step-04.wav"
+dest_files=[ "res://.import/step-04.wav-727298df915f6984e4d0680a2516ec1f.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

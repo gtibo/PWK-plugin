@@ -1,0 +1,100 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://addons/PWK/Dialogue/demo/simple_conversartion.gd" type="Script" id=1]
+[ext_resource path="res://addons/PWK/Dialogue/demo/sprites/1651407469044-808381299.png" type="Texture" id=2]
+[ext_resource path="res://addons/PWK/Dialogue/DialogueBubbleDisplay.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/PWK/nodes/util/JoyMap.gd" type="Script" id=4]
+[ext_resource path="res://addons/PWK/Dialogue/demo/dialogues/basic_dialogue.tres" type="Resource" id=5]
+[ext_resource path="res://addons/PWK/Dialogue/demo/dialogue_manager.tres" type="Resource" id=6]
+[ext_resource path="res://addons/PWK/Dialogue/demo/scripts/LoopPath.gd" type="Script" id=7]
+[ext_resource path="res://icon.png" type="Texture" id=8]
+[ext_resource path="res://addons/PWK/Dialogue/demo/actors/boActor.tres" type="Resource" id=9]
+[ext_resource path="res://addons/PWK/Dialogue/demo/actors/beeActor.tres" type="Resource" id=10]
+[ext_resource path="res://addons/PWK/Dialogue/actor_anchor_2d.tscn" type="PackedScene" id=11]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -41, 431, -239.002, 31.1127, 239.002, -31.1127, 334, 201, -203.509, 14.3009, 203.509, -14.3009, 1181, 445, -233.345, -39.598, 233.345, 39.598, 1624, 186, 152.735, -179.605, -152.735, 179.605, 1663, 591, 134.35, 55.1543, -134.35, -55.1543, 80, 783, 0, 0, 0, 0, -41, 431 )
+}
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 1 )
+dialogue_manager = ExtResource( 6 )
+dialogue_test = ExtResource( 5 )
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.670588, 0.670588, 0.670588, 1 )
+
+[node name="JoyMap" type="Node" parent="."]
+script = ExtResource( 4 )
+type = "keyboard"
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+position = Vector2( -41, 431 )
+rotate = false
+script = ExtResource( 7 )
+path_tween = NodePath("Tween")
+
+[node name="Tween" type="Tween" parent="Path2D/PathFollow2D"]
+
+[node name="Bo" type="Sprite" parent="Path2D/PathFollow2D"]
+visible = false
+texture = ExtResource( 8 )
+
+[node name="ActorAnchor2D" parent="Path2D/PathFollow2D/Bo" instance=ExtResource( 11 )]
+current_actor = ExtResource( 9 )
+
+[node name="Bee" type="Sprite" parent="."]
+position = Vector2( 816, 475 )
+scale = Vector2( 0.276, 0.276 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="ActorAnchor2D" parent="Bee" instance=ExtResource( 11 )]
+position = Vector2( 9.90112, -267.327 )
+current_actor = ExtResource( 10 )
+
+[node name="Camera2D" type="Camera2D" parent="Bee"]
+position = Vector2( 0, -173.913 )
+current = true
+
+[node name="Bee2" type="Sprite" parent="."]
+position = Vector2( 482, 478 )
+scale = Vector2( 0.276, 0.276 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Bee3" type="Sprite" parent="."]
+position = Vector2( 1079, 534.132 )
+scale = Vector2( 0.276, 0.276 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Bee4" type="Sprite" parent="."]
+position = Vector2( 973, 600.132 )
+scale = Vector2( 0.276, 0.276 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DialogueBubbleDisplay" parent="CanvasLayer" instance=ExtResource( 3 )]
+dialogue_manager = ExtResource( 6 )
+
+[connection signal="tween_all_completed" from="Path2D/PathFollow2D/Tween" to="Path2D/PathFollow2D" method="_on_Tween_tween_all_completed"]

@@ -9,6 +9,31 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Resource",
+"class": "ActorData",
+"language": "GDScript",
+"path": "res://addons/PWK/Dialogue/actor/actor_builder.gd"
+}, {
+"base": "Resource",
+"class": "DialogueChoiceBlock",
+"language": "GDScript",
+"path": "res://addons/PWK/Dialogue/blocks/dialogue_choice_block_builder.gd"
+}, {
+"base": "Resource",
+"class": "DialogueData",
+"language": "GDScript",
+"path": "res://addons/PWK/Dialogue/dialogue_data_builder.gd"
+}, {
+"base": "Resource",
+"class": "DialogueLineBlock",
+"language": "GDScript",
+"path": "res://addons/PWK/Dialogue/blocks/dialogue_line_block_builder.gd"
+}, {
+"base": "Resource",
+"class": "DialogueManager",
+"language": "GDScript",
+"path": "res://addons/PWK/Dialogue/dialogue_manager_builder.gd"
+}, {
 "base": "Area2D",
 "class": "HitZone",
 "language": "GDScript",
@@ -18,6 +43,11 @@ _global_script_classes=[ {
 "class": "JoyMap",
 "language": "GDScript",
 "path": "res://addons/PWK/nodes/util/JoyMap.gd"
+}, {
+"base": "Resource",
+"class": "LocationData",
+"language": "GDScript",
+"path": "res://demos/adventure/location_builder.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "PlatformerController",
@@ -49,10 +79,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/PWK/nodes/StateMachine/StateMachine.gd"
 }, {
+"base": "Resource",
+"class": "StoryManager",
+"language": "GDScript",
+"path": "res://demos/adventure/story_manager/story_manager_builder.gd"
+}, {
+"base": "KinematicBody",
+"class": "TopDownController3D",
+"language": "GDScript",
+"path": "res://demos/adventure/top_down_controller_3d.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "TopDownMouseController",
 "language": "GDScript",
 "path": "res://addons/PWK/nodes/controllers/TopDownMouse/TopDownMouseController.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "TopdownController",
+"language": "GDScript",
+"path": "res://addons/PWK/nodes/controllers/top_down/top_down_controller.gd"
 }, {
 "base": "Resource",
 "class": "bomber_rule_manager",
@@ -68,34 +113,45 @@ _global_script_classes=[ {
 "class": "cameraFollow",
 "language": "GDScript",
 "path": "res://addons/PWK/nodes/util/global_camera.gd"
+}, {
+"base": "Resource",
+"class": "focus_manager",
+"language": "GDScript",
+"path": "res://demos/adventure/focus_manager/focus_manager_builder.gd"
 } ]
 _global_script_class_icons={
+"ActorData": "",
+"DialogueChoiceBlock": "",
+"DialogueData": "",
+"DialogueLineBlock": "",
+"DialogueManager": "",
 "HitZone": "",
 "JoyMap": "res://addons/PWK/icones/JoyMap_icon.svg",
+"LocationData": "",
 "PlatformerController": "res://addons/PWK/icones/joystick_icon.svg",
 "PlatformerStateAir": "",
 "PlatformerStateIdle": "",
 "PlatformerStateRun": "",
 "State": "res://addons/PWK/icones/State_icon.svg",
 "StateMachine": "res://addons/PWK/icones/StateMachine_icon.svg",
+"StoryManager": "",
+"TopDownController3D": "",
 "TopDownMouseController": "res://addons/PWK/icones/joystick_icon.svg",
+"TopdownController": "",
 "bomber_rule_manager": "",
 "bomber_theme": "",
-"cameraFollow": ""
+"cameraFollow": "",
+"focus_manager": ""
 }
 
 [application]
 
 config/name="Possible World Kit"
-run/main_scene="res://demos/bomber/Main.tscn"
+run/main_scene="res://demos/adventure/main_adventure.tscn"
 boot_splash/image="res://splash.png"
 boot_splash/fullsize=false
 boot_splash/bg_color=Color( 0.0509804, 0.0509804, 0.054902, 1 )
 config/icon="res://icon.png"
-
-[display]
-
-window/size/fullscreen=true
 
 [editor_plugins]
 
@@ -116,6 +172,4 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-quality/filters/msaa=3
-quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"

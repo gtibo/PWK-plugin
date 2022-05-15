@@ -1,0 +1,60 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://demos/adventure/main_adventure.gd" type="Script" id=1]
+[ext_resource path="res://demos/adventure/storyManager.tres" type="Resource" id=2]
+[ext_resource path="res://demos/adventure/locations/house_data.tres" type="Resource" id=3]
+[ext_resource path="res://addons/PWK/nodes/util/JoyMap.gd" type="Script" id=4]
+[ext_resource path="res://demos/adventure/player/player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://demos/adventure/focus_manager/focus_manager.tres" type="Resource" id=6]
+[ext_resource path="res://demos/adventure/focus_manager/focus_viewer.tscn" type="PackedScene" id=7]
+[ext_resource path="res://demos/adventure/DialogueViewer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=9]
+[ext_resource path="res://demos/adventure/locations/outside_data.tres" type="Resource" id=10]
+[ext_resource path="res://demos/adventure/sounds/soundtrack/theme.mp3" type="AudioStream" id=11]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float opening = 0.5;
+const vec2 center = vec2(0.5, 0.5);
+
+void fragment(){
+	COLOR.a = 1.0 - step(distance(UV, center),opening);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/opening = 0.5
+
+[node name="MainAdventure" type="Node"]
+script = ExtResource( 1 )
+player_scene = ExtResource( 5 )
+story_manager = ExtResource( 2 )
+known_locations = [ ExtResource( 3 ), ExtResource( 10 ) ]
+
+[node name="JoyMap" type="Node" parent="."]
+script = ExtResource( 4 )
+type = "keyboard"
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="FocusViewer" parent="UI" instance=ExtResource( 7 )]
+main_focus_manager = ExtResource( 6 )
+dialogue_manager = ExtResource( 9 )
+
+[node name="DialogueViewer" parent="UI" instance=ExtResource( 8 )]
+story_manager = ExtResource( 2 )
+
+[node name="Tween" type="Tween" parent="UI"]
+
+[node name="TransitionRect" type="ColorRect" parent="UI"]
+material = SubResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="SoundTrack" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+autoplay = true
+
+[node name="SceneHolder" type="Node2D" parent="."]

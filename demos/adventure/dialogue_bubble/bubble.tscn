@@ -1,0 +1,241 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://addons/PWK/RedHatDisplay-SemiBold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://demos/adventure/dialogue_bubble/bubble.gd" type="Script" id=2]
+[ext_resource path="res://demos/adventure/dialogue_choice.tscn" type="PackedScene" id=3]
+[ext_resource path="res://demos/adventure/dialogue_bubble/ChoiceHolder.gd" type="Script" id=4]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform sampler2D n;
+uniform vec2 ratio = vec2(1,1);
+
+void fragment(){
+	// float dist = distance(vec2(0.5,0.5), UV) ;
+	//dist += texture(n, vec2(UV.x - TIME * .4, UV.y + TIME * .2)).r * .05;
+	//COLOR.a = smoothstep(0.51, 0.5, b);
+	//float d = length(UV - vec2(.5,.5)) - .48;
+	float radius = min(ratio.x, ratio.y) * 0.1;
+	vec2 pos = vec2(0.5,0.5)/ratio;
+	vec2 size = vec2(0.5,0.5)/ratio;
+	float d = length(max(abs(UV/ratio-pos)-size+radius,0.0))-radius;
+
+	float text = texture(n, vec2(UV.x - TIME * .3, UV.y + TIME * .4) / ratio).r;
+	d += text * radius / 2.0;
+	COLOR.a =  smoothstep(0.02, 0.0, d * max(ratio.x, ratio.y));
+}"
+
+[sub_resource type="OpenSimplexNoise" id=5]
+period = 256.0
+persistence = 0.0
+
+[sub_resource type="NoiseTexture" id=6]
+seamless = true
+noise = SubResource( 5 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/ratio = Vector2( 1, 2 )
+shader_param/n = SubResource( 6 )
+
+[sub_resource type="Theme" id=1]
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=7]
+resource_name = "Open"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("BubbleAnchor:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("BubbleAnchor:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("BubbleAnchor:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1e-05, 1e-05 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Bubble" type="Node2D"]
+scale = Vector2( 1e-05, 1e-05 )
+script = ExtResource( 2 )
+choice_container = NodePath("BubbleAnchor/ChoiceContainer")
+choice_holder = NodePath("BubbleAnchor/ChoiceContainer/MarginContainer/ChoiceHolder")
+choice_scene = ExtResource( 3 )
+bubble_label = NodePath("BubbleAnchor/BubbleContainer/MarginContainer/BubbleText")
+bubble_container = NodePath("BubbleAnchor/BubbleContainer")
+bubble_anchor = NodePath("BubbleAnchor")
+bubble_tail = NodePath("BubbleAnchor/BubbleTail")
+bubble_effect = NodePath("BubbleAnchor/BubbleEffect")
+bubble_tween = NodePath("BubbleTween")
+text_tween = NodePath("TextTween")
+
+[node name="BubbleAnchor" type="Node2D" parent="."]
+
+[node name="BubbleTail" type="Polygon2D" parent="BubbleAnchor"]
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -20, 0, 20, 0, 0, 100 )
+
+[node name="BubbleEffect" type="ColorRect" parent="BubbleAnchor"]
+material = SubResource( 4 )
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 40, 40 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color( 0, 0, 0, 1 )
+
+[node name="BubbleContainer" type="MarginContainer" parent="BubbleAnchor"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.5
+margin_top = -48.5
+margin_right = 50.5
+margin_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="BubbleAnchor/BubbleContainer"]
+margin_right = 101.0
+margin_bottom = 97.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 32
+custom_constants/margin_top = 32
+custom_constants/margin_left = 32
+custom_constants/margin_bottom = 32
+
+[node name="BubbleText" type="Label" parent="BubbleAnchor/BubbleContainer/MarginContainer"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 69.0
+margin_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+
+[node name="ChoiceContainer" type="MarginContainer" parent="BubbleAnchor"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 4 )
+bubble_effect = NodePath("ChoiceBubbleEffect")
+bubble_container = NodePath("../BubbleContainer")
+
+[node name="ChoiceBubbleEffect" type="ColorRect" parent="BubbleAnchor/ChoiceContainer"]
+material = SubResource( 4 )
+margin_right = 40.0
+margin_bottom = 40.0
+color = Color( 1, 0.705882, 0.141176, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="BubbleAnchor/ChoiceContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="ChoiceHolder" type="VBoxContainer" parent="BubbleAnchor/ChoiceContainer/MarginContainer"]
+margin_left = 16.0
+margin_top = 20.0
+margin_right = 24.0
+margin_bottom = 20.0
+size_flags_horizontal = 5
+size_flags_vertical = 4
+
+[node name="BubbleTween" type="Tween" parent="."]
+
+[node name="TextTween" type="Tween" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Open = SubResource( 7 )
+anims/RESET = SubResource( 8 )

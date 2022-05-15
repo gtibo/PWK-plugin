@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="PlaneMesh" id=1]
+size = Vector2( 1.4, 2 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 0.4, 0.4, 0.04 )
+
+[node name="PingPong" type="Spatial"]
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CSGMesh" type="CSGMesh" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.45669 )
+mesh = SubResource( 2 )
+
+[node name="CSGMesh2" type="CSGMesh" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.46053 )
+mesh = SubResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.94803, 0.318182, 0, -0.318182, 0.94803, 0, 1.223, 2.436 )

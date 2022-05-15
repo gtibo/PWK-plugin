@@ -1,0 +1,78 @@
+{
+  "0": {
+    "actor": "m.hat",
+    "lines": [
+      "What? There is someone in there?!",
+      "Why are you in my closet?!"
+    ],
+    "next": "0.1"
+  },
+  "0.1": {
+    "actor": "goblin",
+    "lines": [
+      "I'm the closet goblin...",
+      "Everyone have a closet goblin.",
+      "How do you think thy house is always clean?"
+    ],
+    "next": "0.2"
+  },
+  "0.2": {
+    "actor": "m.hat",
+    "lines": [
+      "I just want my wallet..."
+    ],
+    "next":"0.3"
+  },
+  "0.3": {
+    "actor": "goblin",
+    "lines": [
+      "Yes, I have in my possession thy wallet that thy seek.",
+      "But to get it, thy shall help me in return."
+    ],
+    "next": [{
+        "target": "1",
+        "name": "OK..."
+      },
+      {
+        "target": "2",
+        "name": "I'm calling the police."
+      }
+    ]
+  },
+  "1": {
+    "actor": "goblin",
+    "lines": [
+      "To help me, thy shall find my pair of socks
+      which was stolen from me.",
+      "They contain all my magic.",
+      "It was during the night...
+      A man, with a trench coat and flip flops
+      stole my precious pair of socks."
+    ],
+    "next": "1.1"
+  },
+  "1.1": {
+    "actor": "m.hat",
+    "lines": ["..."],
+    "next": "1.2"
+  },
+  "1.2": {
+    "actor": "goblin",
+    "lines": ["you must go, brave adventurer!"]
+  },
+  "2":{
+    "actor": "goblin",
+    "lines": ["What's the police?"],
+    "next": "2.1"
+  },
+  "2.1":{
+    "actor": "m.hat",
+    "lines": ["I don’t know... It sounded intimidating..."],
+    "next": "2.2"
+  },
+  "2.2":{
+    "actor": "goblin",
+    "lines": ["Anyhow..."],
+    "next": "1"
+  }
+}

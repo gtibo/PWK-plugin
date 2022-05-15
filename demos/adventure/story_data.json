@@ -1,0 +1,87 @@
+{
+  "name": "The marvelous story of a man with an hat",
+  "start": "house",
+  "spawn": "middle_of_the_room",
+  "variables": {
+    "hasSocks": false,
+    "checkedCloset": true
+  },
+  "locations": {
+    "house": {
+      "events": {
+        "Intro": {
+          "once": true,
+          "stack": {
+            "0": {
+              "type": "dialogue",
+              "name": "Intro",
+            }
+          }
+        }
+      },
+      "actions": {
+        "Door": {
+          "name": "Go Outside",
+          "stack": {
+            "0": {
+              "type": "condition",
+              "variable": "checkedCloset",
+              "next": {
+                "positive": "1",
+                "negative": "2"
+              }
+            },
+            "1": {
+                "type": "location_change",
+                "to":"outside",
+                "landmark": "outside_door"
+            },
+            "2": {
+              "type": "dialogue",
+              "name": "forgot_wallet",
+            }
+          }
+        },
+        "Closet": {
+          "name": "Inspect closet",
+          "stack": {
+            "0": {
+              "type": "condition",
+              "variable": "checkedCloset",
+              "next": {
+                "positive": "1",
+                "negative": "2"
+              }
+            },
+            "1": {
+              "type": "condition",
+              "variable": "hasSocks",
+              "next": {
+                "positive": "1.1",
+                "negative": "1.2"
+              }
+            },
+            "2": {
+              "type": "dialogue",
+              "name": "Hello",
+              "next": "2.1"
+            },
+            "1.1": {
+              "type": "dialogue",
+              "name": "Success",
+            },
+            "1.2": {
+              "type": "dialogue",
+              "name": "Fail"
+            },
+            "2.1": {
+              "type": "set",
+              "variable": "checkedCloset",
+              "value": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

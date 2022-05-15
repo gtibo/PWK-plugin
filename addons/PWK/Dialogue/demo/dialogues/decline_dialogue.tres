@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=5 format=2]
+
+[ext_resource path="res://addons/PWK/Dialogue/dialogue_data_builder.gd" type="Script" id=1]
+[ext_resource path="res://addons/PWK/Dialogue/blocks/dialogue_line_block_builder.gd" type="Script" id=2]
+[ext_resource path="res://addons/PWK/Dialogue/demo/actors/beeActor.tres" type="Resource" id=3]
+
+[sub_resource type="Resource" id=3]
+script = ExtResource( 2 )
+actor = ExtResource( 3 )
+line = "Ok, no problemo"
+
+[resource]
+script = ExtResource( 1 )
+lines = [ SubResource( 3 ) ]
+choices = [  ]

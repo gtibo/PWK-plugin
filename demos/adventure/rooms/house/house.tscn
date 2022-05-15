@@ -1,0 +1,119 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://addons/PWK/Dialogue/actor_anchor_2d.tscn" type="PackedScene" id=1]
+[ext_resource path="res://demos/adventure/actors/goblin.tres" type="Resource" id=2]
+[ext_resource path="res://demos/adventure/rooms/house/sprite/0001.png" type="Texture" id=3]
+[ext_resource path="res://demos/adventure/focus_manager/focus_manager.tres" type="Resource" id=4]
+[ext_resource path="res://demos/adventure/focus_zone.gd" type="Script" id=5]
+[ext_resource path="res://demos/adventure/rooms/house/sprite/0002.png" type="Texture" id=6]
+[ext_resource path="res://demos/adventure/rooms/house/sprite/0000.png" type="Texture" id=7]
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 7 ), ExtResource( 3 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 142.285
+
+[node name="house" type="Node2D"]
+
+[node name="BG" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BG"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -532, -269 )
+frames = SubResource( 4 )
+frame = 2
+playing = true
+centered = false
+
+[node name="Walls" type="Node2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls"]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
+polygon = PoolVector2Array( 56, 428, 70, 317, 306, 312, 300, -2, 916, -8, 1037, 760, 1112, 616, 967, -199, 69, -190, 16, 272 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
+polygon = PoolVector2Array( 51, 429, -174, 433, -210, 615, 1112, 612, 1038, 762, -231, 764, -312, 611, -246, 266, 10, 262 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Walls/StaticBody2D"]
+polygon = PoolVector2Array( 815, 266, 827, 457, 678, 444, 655, 649, 1030, 644, 1012, 262, 909, 187, 855, 241, 849, 268 )
+
+[node name="Spawn" type="Position2D" parent="."]
+position = Vector2( 551, 437 )
+
+[node name="Closet" type="Node2D" parent="."]
+position = Vector2( 706, -48 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Zone" type="Area2D" parent="Closet"]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+main_focus_manager = ExtResource( 4 )
+zone_name = "Closet"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Closet/Zone"]
+shape = SubResource( 1 )
+
+[node name="ActorAnchor2D" parent="Closet" instance=ExtResource( 1 )]
+current_actor = ExtResource( 2 )
+
+[node name="Fridge" type="Node2D" parent="."]
+position = Vector2( 246, 60 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Zone" type="Area2D" parent="Fridge"]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+main_focus_manager = ExtResource( 4 )
+zone_name = "Fridge"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Fridge/Zone"]
+shape = SubResource( 1 )
+
+[node name="Door" type="Node2D" parent="."]
+position = Vector2( 1, 310 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Zone" type="Area2D" parent="Door"]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+main_focus_manager = ExtResource( 4 )
+zone_name = "Door"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door/Zone"]
+shape = SubResource( 1 )
+
+[connection signal="area_entered" from="Closet/Zone" to="Closet/Zone" method="_on_Zone_area_entered"]
+[connection signal="area_exited" from="Closet/Zone" to="Closet/Zone" method="_on_Zone_area_exited"]
+[connection signal="area_entered" from="Fridge/Zone" to="Fridge/Zone" method="_on_Zone_area_entered"]
+[connection signal="area_exited" from="Fridge/Zone" to="Fridge/Zone" method="_on_Zone_area_exited"]
+[connection signal="area_entered" from="Door/Zone" to="Door/Zone" method="_on_Zone_area_entered"]
+[connection signal="area_exited" from="Door/Zone" to="Door/Zone" method="_on_Zone_area_exited"]

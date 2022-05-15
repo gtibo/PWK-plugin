@@ -1,0 +1,32 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://demos/adventure/DialogueViewer.gd" type="Script" id=1]
+[ext_resource path="res://addons/PWK/nodes/StateMachine/StateMachine.gd" type="Script" id=2]
+[ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=3]
+[ext_resource path="res://demos/adventure/dialogue_viewer_choice.gd" type="Script" id=4]
+[ext_resource path="res://demos/adventure/dialogue_choice.tscn" type="PackedScene" id=5]
+[ext_resource path="res://demos/adventure/dialogue_viewer_read.gd" type="Script" id=6]
+[ext_resource path="res://demos/adventure/dialogue_viewier_disabled.gd" type="Script" id=7]
+[ext_resource path="res://demos/adventure/dialogue_bubble/bubble.tscn" type="PackedScene" id=8]
+
+[node name="DialogueViewer" type="Node2D"]
+script = ExtResource( 1 )
+dialogue_manager = ExtResource( 3 )
+
+[node name="Bubble" parent="." instance=ExtResource( 8 )]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 2 )
+initial_state = NodePath("Disabled")
+
+[node name="Read" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+bubble_node = NodePath("../../Bubble")
+
+[node name="Choice" type="Node" parent="StateMachine"]
+script = ExtResource( 4 )
+choice_scene = ExtResource( 5 )
+bubble_node = NodePath("../../Bubble")
+
+[node name="Disabled" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )

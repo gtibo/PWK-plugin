@@ -1,41 +1,14 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/PWK/UI/main_panel.gd" type="Script" id=1]
 
 [node name="CenterContainer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource( 1 )
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="Story" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-tab_align = 0
-drag_to_rearrange_enabled = true
-
-[node name="Puppet Editor" type="Control" parent="TabContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="River" type="GraphEdit" parent="TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="Home" type="ScrollContainer" parent="TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
-
-[node name="Home" type="Control" parent="TabContainer/Home"]
