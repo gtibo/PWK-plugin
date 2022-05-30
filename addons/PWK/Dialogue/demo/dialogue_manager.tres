@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource( 1 )
+dialogues_dir_path = ""

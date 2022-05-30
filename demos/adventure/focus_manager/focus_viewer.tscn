@@ -1,46 +1,138 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://demos/adventure/focus_manager/a_button_con.png" type="Texture" id=1]
 [ext_resource path="res://demos/adventure/focus_manager/focus_viewer.gd" type="Script" id=2]
+[ext_resource path="res://addons/PWK/RedHatDisplay-SemiBold.ttf" type="DynamicFontData" id=4]
 
-[node name="FocusViewer" type="PanelContainer"]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -73.5
-margin_top = -86.0
-margin_right = 73.5
-margin_bottom = -24.0
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform sampler2D n;
+uniform vec2 ratio = vec2(1,1);
+
+void fragment(){
+	// float dist = distance(vec2(0.5,0.5), UV) ;
+	//dist += texture(n, vec2(UV.x - TIME * .4, UV.y + TIME * .2)).r * .05;
+	//COLOR.a = smoothstep(0.51, 0.5, b);
+	//float d = length(UV - vec2(.5,.5)) - .48;
+	float radius = min(ratio.x, ratio.y) * 0.1;
+	vec2 pos = vec2(0.5,0.5)/ratio;
+	vec2 size = vec2(0.5,0.5)/ratio;
+	float d = length(max(abs(UV/ratio-pos)-size+radius,0.0))-radius;
+
+	float text = texture(n, vec2(UV.x - TIME * .3, UV.y + TIME * .4) / ratio).r;
+	d += text * radius / 2.0;
+	COLOR.a =  smoothstep(0.02, 0.0, d * max(ratio.x, ratio.y));
+}"
+
+[sub_resource type="OpenSimplexNoise" id=5]
+period = 256.0
+persistence = 0.0
+
+[sub_resource type="NoiseTexture" id=6]
+seamless = true
+noise = SubResource( 5 )
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 3 )
+shader_param/ratio = Vector2( 1, 2 )
+shader_param/n = SubResource( 6 )
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 4 )
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1.1, 1.1 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="FocusViewer" type="MarginContainer"]
+margin_right = 123.0
+margin_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 2 )
 action_name_label = NodePath("MarginContainer/HBoxContainer/Label")
 
+[node name="Bubble" type="ColorRect" parent="."]
+material = SubResource( 7 )
+margin_right = 159.0
+margin_bottom = 64.0
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_left = 27.0
-margin_top = 7.0
-margin_right = 120.0
-margin_bottom = 55.0
+margin_right = 159.0
+margin_bottom = 64.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_constants/margin_right = 8
-custom_constants/margin_top = 8
-custom_constants/margin_left = 8
-custom_constants/margin_bottom = 8
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 85.0
-margin_bottom = 40.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 143.0
+margin_bottom = 48.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
@@ -49,7 +141,15 @@ expand = true
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
 margin_left = 36.0
-margin_top = 9.0
-margin_right = 77.0
-margin_bottom = 23.0
-text = "Action"
+margin_top = 5.0
+margin_right = 127.0
+margin_bottom = 27.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "Action name"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 2 )
+anims/open = SubResource( 8 )
+
+[connection signal="resized" from="." to="." method="_on_FocusViewer_resized"]

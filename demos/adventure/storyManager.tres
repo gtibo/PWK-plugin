@@ -1,12 +1,15 @@
-[gd_resource type="Resource" load_steps=5 format=2]
+[gd_resource type="Resource" load_steps=6 format=2]
 
 [ext_resource path="res://demos/adventure/story_manager/story_manager_builder.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=2]
-[ext_resource path="res://demos/adventure/actors/goblin.tres" type="Resource" id=3]
-[ext_resource path="res://demos/adventure/actors/m.hat.tres" type="Resource" id=4]
+[ext_resource path="res://demos/adventure/actors/actor_manager.tres" type="Resource" id=3]
+[ext_resource path="res://demos/adventure/mini_game/mini_game_manager.tres" type="Resource" id=6]
+[ext_resource path="res://demos/adventure/navigation/navigation_manager.tres" type="Resource" id=8]
 
 [resource]
 script = ExtResource( 1 )
 story_data_path = "res://demos/adventure/story_data.json"
 dialogue_manager = ExtResource( 2 )
-known_actors = [ ExtResource( 3 ), ExtResource( 4 ) ]
+mini_game_manager = ExtResource( 6 )
+navigation_manager = ExtResource( 8 )
+actor_manager = ExtResource( 3 )

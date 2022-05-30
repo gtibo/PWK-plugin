@@ -1,0 +1,119 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://demos/adventure/volley_game/volley_scene.gd" type="Script" id=1]
+[ext_resource path="res://demos/adventure/landmarks/landmark_manager.tres" type="Resource" id=2]
+[ext_resource path="res://demos/adventure/actors/actor_manager.tres" type="Resource" id=3]
+[ext_resource path="res://demos/adventure/volley_game/Ball.tscn" type="PackedScene" id=4]
+[ext_resource path="res://demos/adventure/camera_system/camera_manager.tres" type="Resource" id=5]
+[ext_resource path="res://demos/adventure/volley_game/point_counter.tscn" type="PackedScene" id=6]
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 0.517647, 0.247059, 1, 1 )
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 4, 1, 1 )
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 1, 1, 3.5 )
+
+[sub_resource type="BoxShape" id=9]
+extents = Vector3( 1.59951, 1, 1.78705 )
+
+[sub_resource type="BoxShape" id=10]
+extents = Vector3( 1.5, 0.1, 2 )
+
+[node name="VolleyUI" type="Node"]
+script = ExtResource( 1 )
+landmark_manager = ExtResource( 2 )
+actor_manager = ExtResource( 3 )
+camera_manager = ExtResource( 5 )
+ball_scene = ExtResource( 4 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 0.369
+margin_left = 389.0
+margin_top = 38.0
+margin_right = -389.0
+margin_bottom = -45.4
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="OpponentCounter" parent="CanvasLayer/MarginContainer" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 121.0
+margin_bottom = 138.0
+
+[node name="PlayerCounter" parent="CanvasLayer/MarginContainer" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 125.0
+margin_right = 246.0
+margin_bottom = 138.0
+
+[node name="PunchTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="TerrainRoot" type="Spatial" parent="."]
+
+[node name="desiredTarget" type="CSGSphere" parent="TerrainRoot"]
+material_override = SubResource( 8 )
+radius = 0.2
+
+[node name="TestTarget" type="Position3D" parent="TerrainRoot"]
+visible = false
+
+[node name="CSGSphere" type="CSGSphere" parent="TerrainRoot/TestTarget"]
+material_override = SubResource( 6 )
+radius = 0.24622
+
+[node name="StaticBody" type="StaticBody" parent="TerrainRoot"]
+
+[node name="CollisionShape" type="CollisionShape" parent="TerrainRoot/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="TerrainRoot/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.5 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape3" type="CollisionShape" parent="TerrainRoot/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape4" type="CollisionShape" parent="TerrainRoot/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0 )
+shape = SubResource( 4 )
+
+[node name="Sight" type="Area" parent="TerrainRoot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.5, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TerrainRoot/Sight"]
+shape = SubResource( 9 )
+
+[node name="OpponentZone" type="Area" parent="TerrainRoot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TerrainRoot/OpponentZone"]
+shape = SubResource( 10 )
+
+[node name="PlayerZone" type="Area" parent="TerrainRoot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TerrainRoot/PlayerZone"]
+shape = SubResource( 10 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="TerrainRoot/Sight" to="." method="_on_Sight_body_entered"]
+[connection signal="body_entered" from="TerrainRoot/OpponentZone" to="." method="_on_OpponentZone_body_entered"]
+[connection signal="body_entered" from="TerrainRoot/PlayerZone" to="." method="_on_PlayerZone_body_entered"]

@@ -1,48 +1,15 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/PWK/RedHatDisplay-SemiBold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://demos/adventure/dialogue_bubble/bubble.gd" type="Script" id=2]
 [ext_resource path="res://demos/adventure/dialogue_choice.tscn" type="PackedScene" id=3]
 [ext_resource path="res://demos/adventure/dialogue_bubble/ChoiceHolder.gd" type="Script" id=4]
-
-[sub_resource type="Shader" id=3]
-code = "shader_type canvas_item;
-
-uniform sampler2D n;
-uniform vec2 ratio = vec2(1,1);
-
-void fragment(){
-	// float dist = distance(vec2(0.5,0.5), UV) ;
-	//dist += texture(n, vec2(UV.x - TIME * .4, UV.y + TIME * .2)).r * .05;
-	//COLOR.a = smoothstep(0.51, 0.5, b);
-	//float d = length(UV - vec2(.5,.5)) - .48;
-	float radius = min(ratio.x, ratio.y) * 0.1;
-	vec2 pos = vec2(0.5,0.5)/ratio;
-	vec2 size = vec2(0.5,0.5)/ratio;
-	float d = length(max(abs(UV/ratio-pos)-size+radius,0.0))-radius;
-
-	float text = texture(n, vec2(UV.x - TIME * .3, UV.y + TIME * .4) / ratio).r;
-	d += text * radius / 2.0;
-	COLOR.a =  smoothstep(0.02, 0.0, d * max(ratio.x, ratio.y));
-}"
-
-[sub_resource type="OpenSimplexNoise" id=5]
-period = 256.0
-persistence = 0.0
-
-[sub_resource type="NoiseTexture" id=6]
-seamless = true
-noise = SubResource( 5 )
-
-[sub_resource type="ShaderMaterial" id=4]
-shader = SubResource( 3 )
-shader_param/ratio = Vector2( 1, 2 )
-shader_param/n = SubResource( 6 )
+[ext_resource path="res://addons/PWK/Dialogue/bubble_shader.tres" type="Material" id=5]
 
 [sub_resource type="Theme" id=1]
 
 [sub_resource type="DynamicFont" id=2]
-size = 24
+size = 32
 font_data = ExtResource( 1 )
 
 [sub_resource type="Animation" id=7]
@@ -143,10 +110,11 @@ text_tween = NodePath("TextTween")
 
 [node name="BubbleTail" type="Polygon2D" parent="BubbleAnchor"]
 color = Color( 0, 0, 0, 1 )
+antialiased = true
 polygon = PoolVector2Array( -20, 0, 20, 0, 0, 100 )
 
 [node name="BubbleEffect" type="ColorRect" parent="BubbleAnchor"]
-material = SubResource( 4 )
+material = ExtResource( 5 )
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 40, 40 )
@@ -172,22 +140,22 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="BubbleAnchor/BubbleContainer"]
-margin_right = 101.0
-margin_bottom = 97.0
+margin_right = 104.0
+margin_bottom = 127.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/margin_right = 32
-custom_constants/margin_top = 32
-custom_constants/margin_left = 32
-custom_constants/margin_bottom = 32
+custom_constants/margin_right = 52
+custom_constants/margin_top = 42
+custom_constants/margin_left = 52
+custom_constants/margin_bottom = 42
 
 [node name="BubbleText" type="Label" parent="BubbleAnchor/BubbleContainer/MarginContainer"]
-margin_left = 32.0
-margin_top = 32.0
-margin_right = 69.0
-margin_bottom = 65.0
+margin_left = 52.0
+margin_top = 42.0
+margin_right = 52.0
+margin_bottom = 85.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -207,7 +175,7 @@ bubble_effect = NodePath("ChoiceBubbleEffect")
 bubble_container = NodePath("../BubbleContainer")
 
 [node name="ChoiceBubbleEffect" type="ColorRect" parent="BubbleAnchor/ChoiceContainer"]
-material = SubResource( 4 )
+material = ExtResource( 5 )
 margin_right = 40.0
 margin_bottom = 40.0
 color = Color( 1, 0.705882, 0.141176, 1 )

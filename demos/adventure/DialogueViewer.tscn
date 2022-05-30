@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://demos/adventure/DialogueViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/PWK/nodes/StateMachine/StateMachine.gd" type="Script" id=2]
@@ -8,10 +8,12 @@
 [ext_resource path="res://demos/adventure/dialogue_viewer_read.gd" type="Script" id=6]
 [ext_resource path="res://demos/adventure/dialogue_viewier_disabled.gd" type="Script" id=7]
 [ext_resource path="res://demos/adventure/dialogue_bubble/bubble.tscn" type="PackedScene" id=8]
+[ext_resource path="res://demos/adventure/actors/actor_manager.tres" type="Resource" id=9]
 
 [node name="DialogueViewer" type="Node2D"]
 script = ExtResource( 1 )
 dialogue_manager = ExtResource( 3 )
+actor_manager = ExtResource( 9 )
 
 [node name="Bubble" parent="." instance=ExtResource( 8 )]
 

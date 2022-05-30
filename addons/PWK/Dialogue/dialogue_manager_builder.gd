@@ -2,13 +2,14 @@ extends Resource
 class_name DialogueManager
 
 signal dialogue_start
-signal dialogue_end
+signal dialogue_end(returnedValue)
 
 export(String, DIR) var dialogues_dir_path
 
 var current_dialogue_data = null
 
 func start(dialogue_name):
+	
 	var dialogue_path = dialogues_dir_path + "/" +dialogue_name + ".json";
 	var file = File.new()
 	file.open(dialogue_path, file.READ)
@@ -17,6 +18,6 @@ func start(dialogue_name):
 	current_dialogue_data = JSON.parse(text).result
 	emit_signal("dialogue_start")
 
-func end():
+func end(return_value = null):
 	current_dialogue_data = null
-	emit_signal("dialogue_end")
+	emit_signal("dialogue_end", return_value)

@@ -2,19 +2,28 @@ extends Node
 export(PackedScene) var player_scene
 export(Resource) var story_manager
 export(Array, Resource) var known_locations
-# Should be equal to a vector
-var player_spawn = null
+export(Resource) var landmark_manager
+export(Resource) var navigation_manager
+
+signal location_changed
 
 func _ready():
 	var location_table = {}
 	for location in known_locations:
-		location_table[location.name] = location.scene
+		location_table[location.name] = location
 	known_locations = location_table
 	story_manager.setup()
 	var spawn_name = story_manager.story_data.spawn
 	load_scene(story_manager.story_data.start, spawn_name)
 	story_manager.connect("location_change", self, "on_location_change")
+	story_manager.connect("custom_signal", self, "on_custom_signal")
 	
+func on_custom_signal(signal_name, value):
+	if signal_name == "restart":
+		story_manager.setup()
+		var spawn_name = story_manager.story_data.spawn
+		load_scene(story_manager.story_data.start, spawn_name)
+
 func on_location_change(to, landmark):
 	load_scene(to, landmark)
 	
@@ -28,18 +37,16 @@ func load_scene(scene_name, spawn_name):
 		for child in $SceneHolder.get_children():
 			child.queue_free()
 				
-	var scene = known_locations[scene_name].instance()
+	var scene = known_locations[scene_name].scene.instance()
+	$SoundTrack.stream = known_locations[scene_name].theme
+	$SoundTrack.play()
 	$SceneHolder.add_child(scene)
-	var landmarks = get_tree().get_nodes_in_group("landmark")
-	var landmark_table = {}
-	for landmark in landmarks:
-		landmark_table[landmark.landmark_name] = landmark
-	landmarks = landmark_table
-	
-	var spawn_position = landmarks[spawn_name].get_position()
+	# Scene set
 	var player = player_scene.instance()
-	player.translation = spawn_position
 	$SceneHolder.add_child(player)
+	emit_signal("location_changed")
+	var spawn_position = landmark_manager.get_landmark(spawn_name).get_position()
+	player.translation = spawn_position
 	# Open animation
 	var m = $UI/TransitionRect.get_material()
 	m.set_shader_param("opening", 0.0)

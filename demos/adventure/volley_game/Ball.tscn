@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://demos/adventure/volley_game/beach_ball.glb" type="PackedScene" id=1]
+
+[sub_resource type="PhysicsMaterial" id=7]
+bounce = 0.5
+
+[sub_resource type="SphereShape" id=5]
+radius = 0.3
+
+[node name="Ball" type="RigidBody" groups=["Ball"]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.7673, 0 )
+collision_mask = 2
+physics_material_override = SubResource( 7 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 5 )
+
+[node name="beach_ball" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0 )

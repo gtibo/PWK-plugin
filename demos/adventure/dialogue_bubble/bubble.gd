@@ -62,7 +62,7 @@ func _process(_delta):
 	if actor_anchor == null: return
 	var origin = actor_anchor.get_screen_position()
 	bubble_anchor.position = origin
-	bubble_anchor.position.y -= 150
+	bubble_anchor.position.y -= 200
 	bubble_anchor.position.x = clamp(bubble_anchor.position.x, container_width, viewport.size.x - container_width)
 	bubble_anchor.position.y = clamp(bubble_anchor.position.y, container_height, viewport.size.y - container_height)
 	var tail_end : Vector2 = origin - Vector2(0, 50) - bubble_anchor.position
@@ -95,7 +95,6 @@ func _on_BubbleContainer_item_rect_changed():
 	else:
 		ratio = Vector2(h/w,1)
 	bubble_effect.material.set_shader_param("ratio", ratio)
-	
 	bubble_tween.interpolate_property(bubble_effect, "rect_min_size", bubble_effect.rect_min_size, bubble_container.rect_size, 0.6,
 	Tween.TRANS_BACK)
 	bubble_tween.start()

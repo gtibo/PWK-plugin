@@ -1,6 +1,6 @@
 extends Node
 export(Resource) var dialogue_manager
-export(Resource) var story_manager
+export(Resource) var actor_manager
 
 onready var SM : StateMachine = $StateMachine
 
@@ -22,10 +22,10 @@ func activate():
 	dialogue_data = dialogue_manager.current_dialogue_data
 	SM.transition_to("Read")
 	
-func desactivate():
+func desactivate(returnedValue = null):
 	$Bubble.close()
 	yield($Bubble, "closed")
 	dialogue_data = null
-	dialogue_manager.end()
 	SM.transition_to("Disabled")
+	dialogue_manager.end(returnedValue)
 	

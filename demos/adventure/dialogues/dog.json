@@ -1,0 +1,45 @@
+{
+  "0": {
+    "actor": "m.hat",
+    "lines": [
+      "Hello..."
+    ],
+    "next": "1"
+  },
+  "1": {
+    "actor": "dog",
+    "lines": [
+      "Woof woof."
+    ],
+    "next": "2"
+  },
+  "2": {
+    "actor": "m.hat",
+    "lines": [
+      "I was wondering if..."
+    ],
+    "next": [{
+        "target": "3",
+        "name": "I can pet you!"
+      },
+      {
+        "target": "4",
+        "name": "You could help me..."
+      }
+    ]
+  },
+  "3": {
+    "actor": "dog",
+    "lines": [
+      "Oh! you wanna pet me, show me what you got human!"
+    ],
+    "return": "pet"
+  },
+  "4": {
+    "actor": "dog",
+    "lines": [
+      "Sure! Follow me!"
+    ],
+    "return": "follow"
+  }
+}

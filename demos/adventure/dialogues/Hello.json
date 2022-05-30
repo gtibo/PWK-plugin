@@ -11,8 +11,8 @@
     "actor": "goblin",
     "lines": [
       "I'm the closet goblin...",
-      "Everyone have a closet goblin.",
-      "How do you think thy house is always clean?"
+      "Everyone has a closet goblin.",
+      "How doth thee bethink thy house is at each moment crisp?!"
     ],
     "next": "0.2"
   },
@@ -46,8 +46,8 @@
       which was stolen from me.",
       "They contain all my magic.",
       "It was during the night...
-      A man, with a trench coat and flip flops
-      stole my precious pair of socks."
+      A sir, with a trench coat and flip flops
+did steal mine own precious pair of socks."
     ],
     "next": "1.1"
   },
@@ -58,7 +58,7 @@
   },
   "1.2": {
     "actor": "goblin",
-    "lines": ["you must go, brave adventurer!"]
+    "lines": ["Thee might not but wend, brave adventur'r!"]
   },
   "2":{
     "actor": "goblin",

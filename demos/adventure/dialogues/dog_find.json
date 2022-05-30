@@ -1,0 +1,23 @@
+{
+  "0": {
+    "actor": "dog",
+    "lines": [
+      "Yes, for sure, the smell comes from here...",
+      "Someone is hiding in the bush..."
+    ],
+    "next": "1"
+  },
+  "1": {
+    "actor": "m.hat",
+    "lines": [
+      "That's odd..."
+    ],
+    "next": "2"
+  },
+  "2": {
+    "actor": "jp",
+    "lines": [
+      "NOT COOL!"
+    ],
+  }
+}

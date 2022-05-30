@@ -1,0 +1,129 @@
+[gd_scene load_steps=34 format=2]
+
+[ext_resource path="res://demos/adventure/old_player/player.gd" type="Script" id=1]
+[ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=2]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0000.png" type="Texture" id=3]
+[ext_resource path="res://demos/adventure/player/m.hat.tres" type="Resource" id=4]
+[ext_resource path="res://demos/adventure/actor_anchor3d.gd" type="Script" id=5]
+[ext_resource path="res://demos/adventure/actors/actor_mat.tres" type="Material" id=6]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0028.png" type="Texture" id=7]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0036.png" type="Texture" id=8]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0008.png" type="Texture" id=9]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0012.png" type="Texture" id=10]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0020.png" type="Texture" id=11]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0032.png" type="Texture" id=12]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0004.png" type="Texture" id=13]
+[ext_resource path="res://demos/adventure/old_player/sprites/idle/0024.png" type="Texture" id=14]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0000.png" type="Texture" id=15]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0002.png" type="Texture" id=16]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0001.png" type="Texture" id=17]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0007.png" type="Texture" id=18]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0004.png" type="Texture" id=19]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0005.png" type="Texture" id=20]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0006.png" type="Texture" id=21]
+[ext_resource path="res://demos/adventure/old_player/sprites/walk/0003.png" type="Texture" id=22]
+[ext_resource path="res://demos/adventure/old_player/footstep.gd" type="Script" id=23]
+[ext_resource path="res://demos/adventure/sounds/footsteps/step-01.wav" type="AudioStream" id=24]
+[ext_resource path="res://demos/adventure/sounds/footsteps/step-02.wav" type="AudioStream" id=25]
+[ext_resource path="res://demos/adventure/sounds/footsteps/step-03.wav" type="AudioStream" id=26]
+[ext_resource path="res://demos/adventure/sounds/footsteps/step-04.wav" type="AudioStream" id=27]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 0.567891, 0.558892, 0.27167 )
+
+[sub_resource type="QuadMesh" id=2]
+size = Vector2( 1.5, 1.5 )
+
+[sub_resource type="SphereShape" id=3]
+radius = 0.5
+
+[sub_resource type="Animation" id=14]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material_override:shader_param/TextureUniform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 3 ) ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "idle"
+length = 0.9
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material_override:shader_param/TextureUniform")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 3 ), ExtResource( 13 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 14 ), ExtResource( 7 ), ExtResource( 12 ), ExtResource( 8 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "walk"
+length = 0.4
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material_override:shader_param/albedo")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 15 ), ExtResource( 17 ), ExtResource( 16 ), ExtResource( 22 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 18 ) ]
+}
+
+[node name="Player" type="KinematicBody"]
+collision_mask = 2
+script = ExtResource( 1 )
+dialogue_manager = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.886058, 0.463574, 0, -0.463574, 0.886058, 0, 3.29688, 5.84973 )
+fov = 25.0
+
+[node name="Sprite" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.964012, 0.265859, 0, -0.265859, 0.964012, 0, 0.0968767, 0 )
+material_override = ExtResource( 6 )
+use_in_baked_light = true
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="FocusTrigger" type="Area" parent="." groups=["FocusTrigger"]]
+
+[node name="CollisionShape" type="CollisionShape" parent="FocusTrigger"]
+shape = SubResource( 3 )
+
+[node name="ActorAnchor" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.617936, 0 )
+script = ExtResource( 5 )
+current_actor = ExtResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 14 )
+anims/idle = SubResource( 10 )
+anims/walk = SubResource( 11 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+unit_size = 1.5
+script = ExtResource( 23 )
+steps_sound = [ ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ) ]
+
+[connection signal="finished" from="AudioStreamPlayer3D" to="AudioStreamPlayer3D" method="_on_AudioStreamPlayer3D_finished"]

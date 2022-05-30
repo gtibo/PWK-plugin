@@ -1,0 +1,230 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://demos/adventure/rythm_game/button_indication.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/PWK/icones/buttons/b_button_con.png" type="Texture" id=2]
+[ext_resource path="res://addons/PWK/icones/buttons/a_button_con.png" type="Texture" id=4]
+[ext_resource path="res://demos/adventure/counter/1/1_idle0000.png" type="Texture" id=5]
+[ext_resource path="res://addons/PWK/icones/buttons/y_button_con.png" type="Texture" id=6]
+[ext_resource path="res://addons/PWK/icones/buttons/x_button_con.png" type="Texture" id=7]
+[ext_resource path="res://demos/adventure/rythm_game/rythm_scene.gd" type="Script" id=8]
+[ext_resource path="res://demos/adventure/rythm_game/note.tscn" type="PackedScene" id=9]
+[ext_resource path="res://demos/adventure/counter/1/1_idle0001.png" type="Texture" id=10]
+[ext_resource path="res://demos/adventure/counter/1/1_idle0002.png" type="Texture" id=11]
+[ext_resource path="res://demos/adventure/counter/go/go_idle0001.png" type="Texture" id=12]
+[ext_resource path="res://demos/adventure/counter/go/go_idle0000.png" type="Texture" id=13]
+[ext_resource path="res://demos/adventure/counter/2/3_idle0002.png" type="Texture" id=14]
+[ext_resource path="res://demos/adventure/counter/3/3_idle0001.png" type="Texture" id=15]
+[ext_resource path="res://demos/adventure/counter/go/go_idle0002.png" type="Texture" id=16]
+[ext_resource path="res://demos/adventure/counter/2/3_idle0001.png" type="Texture" id=17]
+[ext_resource path="res://demos/adventure/counter/3/3_idle0000.png" type="Texture" id=18]
+[ext_resource path="res://demos/adventure/counter/2/3_idle0000.png" type="Texture" id=19]
+[ext_resource path="res://demos/adventure/counter/3/3_idle0002.png" type="Texture" id=20]
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CountDown:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CountDown:rect_scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CountDown:rect_rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 10.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CountDown:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 5 ) ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "count"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("CountDown:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.8, 1, 1.2, 1.8, 2, 2.2, 2.8, 3, 3.2, 3.7, 3.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CountDown:rect_scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.9, 1, 1.9, 2, 2.9, 3, 3.2, 3.3, 3.6, 3.8 ),
+"transitions": PoolRealArray( 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.4, 1.4 ), Vector2( 1, 1 ), Vector2( 1.4, 1.4 ), Vector2( 1, 1 ), Vector2( 1.4, 1.4 ), Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1.4, 1.4 ), Vector2( 1.4, 1.4 ), Vector2( 2, 2 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CountDown:rect_rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3.2, 3.3, 3.4, 3.5, 3.6, 3.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 10.0, -10.0, 10.0, -10.0, 0.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CountDown:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 18 ), ExtResource( 15 ), ExtResource( 20 ), ExtResource( 18 ), ExtResource( 15 ), ExtResource( 20 ), ExtResource( 18 ), ExtResource( 15 ), ExtResource( 20 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 17 ), ExtResource( 14 ), ExtResource( 19 ), ExtResource( 17 ), ExtResource( 14 ), ExtResource( 19 ), ExtResource( 17 ), ExtResource( 14 ), ExtResource( 19 ), ExtResource( 5 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 5 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 5 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 5 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 16 ) ]
+}
+
+[node name="Control" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -384.0
+margin_top = -225.0
+margin_right = 384.0
+margin_bottom = 225.0
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_vertical_guides_": [  ]
+}
+icons = [ ExtResource( 4 ), ExtResource( 7 ), ExtResource( 2 ), ExtResource( 6 ) ]
+note_scene = ExtResource( 9 )
+
+[node name="MarginContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Tracks" type="HBoxContainer" parent="MarginContainer"]
+margin_right = 768.0
+margin_bottom = 371.0
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/Tracks"]
+margin_right = 189.0
+margin_bottom = 371.0
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 0.392157 )
+
+[node name="ColorRect2" type="ColorRect" parent="MarginContainer/Tracks"]
+margin_left = 193.0
+margin_right = 382.0
+margin_bottom = 371.0
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 0.392157 )
+
+[node name="ColorRect3" type="ColorRect" parent="MarginContainer/Tracks"]
+margin_left = 386.0
+margin_right = 575.0
+margin_bottom = 371.0
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 0.392157 )
+
+[node name="ColorRect4" type="ColorRect" parent="MarginContainer/Tracks"]
+margin_left = 579.0
+margin_right = 768.0
+margin_bottom = 371.0
+size_flags_horizontal = 3
+color = Color( 0, 0, 0, 0.392157 )
+
+[node name="End" type="HBoxContainer" parent="MarginContainer"]
+margin_top = 375.0
+margin_right = 768.0
+margin_bottom = 450.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+alignment = 1
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="TextureRect" parent="MarginContainer/End" instance=ExtResource( 1 )]
+margin_right = 189.0
+margin_bottom = 75.0
+
+[node name="TextureRect2" parent="MarginContainer/End" instance=ExtResource( 1 )]
+margin_right = 189.0
+margin_bottom = 75.0
+
+[node name="TextureRect3" parent="MarginContainer/End" instance=ExtResource( 1 )]
+margin_right = 189.0
+margin_bottom = 75.0
+
+[node name="TextureRect4" parent="MarginContainer/End" instance=ExtResource( 1 )]
+margin_right = 189.0
+margin_bottom = 75.0
+
+[node name="CountDown" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -113.0
+margin_top = -113.0
+margin_right = 113.0
+margin_bottom = 113.0
+rect_rotation = 10.0
+rect_pivot_offset = Vector2( 113, 113 )
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 2 )
+anims/count = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true

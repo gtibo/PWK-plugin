@@ -1,10 +1,13 @@
 {
   "name": "The marvelous story of a man with an hat",
-  "start": "house",
-  "spawn": "middle_of_the_room",
+  "start": "outside",
+  "spawn": "outside_door",
   "variables": {
     "hasSocks": false,
-    "checkedCloset": true
+    "pettedDog": false,
+    "checkedCloset": false,
+    "needHelp": true,
+    "checkedDoor": false
   },
   "locations": {
     "house": {
@@ -20,8 +23,17 @@
         }
       },
       "actions": {
+        "Fridge": {
+          "name": "Inspect fridge",
+          "stack": {
+            "0": {
+              "type": "dialogue",
+              "name": "look_at_fridge",
+            }
+          }
+        },
         "Door": {
-          "name": "Go Outside",
+          "name": "Go outside",
           "stack": {
             "0": {
               "type": "condition",
@@ -32,13 +44,19 @@
               }
             },
             "1": {
-                "type": "location_change",
-                "to":"outside",
-                "landmark": "outside_door"
+              "type": "location_change",
+              "to": "outside",
+              "landmark": "outside_door"
             },
             "2": {
               "type": "dialogue",
               "name": "forgot_wallet",
+              "next": "2.1"
+            },
+            "2.1": {
+              "type": "set",
+              "variable": "checkedDoor",
+              "value": true
             }
           }
         },
@@ -46,6 +64,18 @@
           "name": "Inspect closet",
           "stack": {
             "0": {
+              "type": "condition",
+              "variable": "checkedDoor",
+              "next": {
+                "positive": "0.1",
+                "negative": "0.2"
+              }
+            },
+            "0.2": {
+              "type": "dialogue",
+              "name": "look_at_closet",
+            },
+            "0.1": {
               "type": "condition",
               "variable": "checkedCloset",
               "next": {
@@ -78,6 +108,111 @@
               "type": "set",
               "variable": "checkedCloset",
               "value": true
+            }
+          }
+        }
+      }
+    },
+    "outside": {
+      "actions": {
+        "JP": {
+          "name": "Talk to stranger",
+          "stack": {
+            "0": {
+              "type": "goto",
+              "routes": [
+                ["m.hat", "volley_right"],
+                ["jp", "volley_left"]
+              ],
+              "next": "0.1",
+            },
+            "0.1": {
+              "type": "lookat",
+              "looks": [
+                ["m.hat", "jp"],
+                ["jp", "m.hat"]
+              ],
+              "next": "0.2"
+            },
+            "0.2": {
+              "type": "minigame",
+              "name": "volley",
+              "score": 0,
+            }
+          }
+        },
+        "Dog": {
+          "name": "Talk to dog",
+          "stack": {
+            "0": {
+              "type": "goto",
+              "routes": [
+                ["m.hat", "front_dog"]
+              ],
+              "next": "0.1",
+            },
+            "0.1": {
+              "type": "lookat",
+              "looks": [
+                ["m.hat", "dog"],
+                ["dog", "m.hat"]
+              ],
+              "next": "0.2"
+            },
+            "0.2": {
+              "type": "dialogue",
+              "name": "dog",
+              "onReturn": {
+                "pet": "1",
+                "follow": "5"
+              }
+            },
+            "1": {
+              "type": "minigame",
+              "name": "rhythm",
+              "score": 0,
+              "next": "2"
+            },
+            "2": {
+              "type": "compare",
+              "method": "A_GREATER_THAN_B",
+              "a": "step_1_score",
+              "b": 0.5,
+              "positive": "3",
+              "negative": "4"
+            },
+            "3": {
+              "type": "dialogue",
+              "name": "dog_success",
+              "next": "3.1"
+            },
+            "3.1": {
+              "type": "set",
+              "variable": "pettedDog",
+              "value": true
+            },
+            "4": {
+              "type": "dialogue",
+              "name": "dog_fail"
+            },
+            "5": {
+              "type": "goto",
+              "routes": [
+                ["m.hat", "bush_right"],
+                ["dog", "bush_left"]
+              ],
+              "next": "6"
+            },
+            "6": {
+              "type": "dialogue",
+              "name": "dog_find",
+              "next": "7"
+            },
+            "7": {
+              "type": "goto",
+              "routes": [
+                ["jp", "bush_front"]
+              ]
             }
           }
         }

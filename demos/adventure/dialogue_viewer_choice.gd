@@ -18,6 +18,7 @@ func handle_input(_event):
 		incr_choice(1)
 
 func enter(msg := {}):
+	choice_index = 0
 	current_choice = msg.next
 	choice_size = current_choice.size()
 	bubble_node.set_choices(current_choice)

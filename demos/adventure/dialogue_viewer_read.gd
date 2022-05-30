@@ -3,13 +3,17 @@ extends State
 export(NodePath) onready var bubble_node = get_node(bubble_node) as Node2D
 
 var is_ended = false
+var current_step = null
 
 func handle_input(_event):
 	if owner.bubble_busy: return
 	if Input.is_action_just_pressed("0_a_button"):
 		get_tree().set_input_as_handled()
 		if is_ended:
-			owner.desactivate()
+			var returnedValue = null
+			if current_step.has("return"):
+				returnedValue = current_step.return
+			owner.desactivate(returnedValue)
 		else:
 			progress()
 
@@ -19,9 +23,9 @@ func enter(_msg := {}):
 	progress()
 	
 func progress():
-	var current_step = owner.dialogue_data[owner.current_step_id]
+	current_step = owner.dialogue_data[owner.current_step_id]
 	var line = current_step.lines.pop_front()
-	var actor = owner.story_manager.known_actors[current_step.actor]
+	var actor = owner.actor_manager.get_actor(current_step.actor)
 	bubble_node.actor_anchor = actor.anchor
 	if line != null:
 		owner.bubble_busy = true

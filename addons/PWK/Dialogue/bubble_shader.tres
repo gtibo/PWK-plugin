@@ -1,0 +1,38 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform sampler2D n;
+uniform vec2 ratio = vec2(1,1);
+
+uniform float bubble_radius = 0.1;
+
+void fragment(){
+	// float dist = distance(vec2(0.5,0.5), UV) ;
+	//dist += texture(n, vec2(UV.x - TIME * .4, UV.y + TIME * .2)).r * .05;
+	//COLOR.a = smoothstep(0.51, 0.5, b);
+	//float d = length(UV - vec2(.5,.5)) - .48;
+	float radius = min(ratio.x, ratio.y) * bubble_radius;
+	vec2 pos = vec2(0.5,0.5)/ratio;
+	vec2 size = vec2(0.5,0.5)/ratio;
+	float d = length(max(abs(UV/ratio-pos)-size+radius,0.0))-radius;
+
+	float text = texture(n, vec2(UV.x - TIME * .3, UV.y + TIME * .4) / ratio).r;
+	d += text * radius / 2.0;
+	COLOR.a =  smoothstep(0.02, 0.0, d * max(ratio.x, ratio.y));
+}"
+
+[sub_resource type="OpenSimplexNoise" id=5]
+period = 256.0
+persistence = 0.0
+
+[sub_resource type="NoiseTexture" id=6]
+seamless = true
+noise = SubResource( 5 )
+
+[resource]
+shader = SubResource( 3 )
+shader_param/ratio = Vector2( 1, 1 )
+shader_param/bubble_radius = 0.06
+shader_param/n = SubResource( 6 )

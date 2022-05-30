@@ -4,7 +4,6 @@
 [ext_resource path="res://demos/adventure/textures/paper_texture/Paper_Wrinkled_001_normal.jpg" type="Texture" id=2]
 
 [resource]
-params_cull_mode = 2
 albedo_texture = ExtResource( 1 )
 normal_enabled = true
 normal_scale = 1.0

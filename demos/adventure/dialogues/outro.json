@@ -1,0 +1,41 @@
+{
+  "0": {
+    "actor": "dog",
+    "lines": [
+      "Sorry good fellow, you can't go further than that...
+      this place doesn 't exist yet"    ],
+      "next": "1"
+    },
+    "1": {
+      "actor": "m.hat",
+      "lines": [
+        "ok... but what are we doing then?!",
+      ],
+      "next": "2"
+    },
+    "2": {
+      "actor": "dog",
+      "lines": [
+        "Perhaps it is a sign,
+        an opportunity to reflect on our lives...",
+        "Are we not all an unfinished piece of work?"
+      ],
+      "next": "3"
+    },
+    "3": {
+      "actor": "m.hat",
+      "lines": [
+        "do you know when this place will exist
+        I have to find socks
+        for an annoying goblin "
+      ],
+      "next": "4"
+    },
+    "4": {
+      "actor": "dog",
+      "lines": [
+        "That I can't tell you...",
+        "What I do know is that the game will restart..."
+      ]
+    }
+  }

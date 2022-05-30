@@ -2,7 +2,7 @@ extends KinematicBody
 class_name TopDownController3D
 export (int,0,3) var controller_index setget set_controller_index
 export var max_speed = 2
-var gravity = 100
+var gravity = 1
 
 var left_button
 var right_button
@@ -31,4 +31,4 @@ func check_movement(delta):
 	velocity.x = input_vel.x
 	velocity.z = input_vel.y
 	velocity.y -= gravity * delta
-	velocity = move_and_slide(velocity, Vector3.UP)
+	velocity = move_and_slide_with_snap(velocity, Vector3.DOWN, Vector3.UP, true)

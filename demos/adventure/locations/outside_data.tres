@@ -1,9 +1,11 @@
-[gd_resource type="Resource" load_steps=3 format=2]
+[gd_resource type="Resource" load_steps=4 format=2]
 
 [ext_resource path="res://demos/adventure/location_builder.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/rooms/outsite/outside.tscn" type="PackedScene" id=2]
+[ext_resource path="res://demos/adventure/sounds/soundtrack/happy_city.wav" type="AudioStream" id=3]
 
 [resource]
 script = ExtResource( 1 )
 name = "outside"
 scene = ExtResource( 2 )
+theme = ExtResource( 3 )

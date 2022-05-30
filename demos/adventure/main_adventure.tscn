@@ -1,16 +1,32 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://demos/adventure/main_adventure.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/storyManager.tres" type="Resource" id=2]
 [ext_resource path="res://demos/adventure/locations/house_data.tres" type="Resource" id=3]
 [ext_resource path="res://addons/PWK/nodes/util/JoyMap.gd" type="Script" id=4]
-[ext_resource path="res://demos/adventure/player/player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://demos/adventure/player/player_actor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://demos/adventure/focus_manager/focus_manager.tres" type="Resource" id=6]
 [ext_resource path="res://demos/adventure/focus_manager/focus_viewer.tscn" type="PackedScene" id=7]
 [ext_resource path="res://demos/adventure/DialogueViewer.tscn" type="PackedScene" id=8]
-[ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=9]
+[ext_resource path="res://demos/adventure/minigameDisplay.gd" type="Script" id=9]
 [ext_resource path="res://demos/adventure/locations/outside_data.tres" type="Resource" id=10]
-[ext_resource path="res://demos/adventure/sounds/soundtrack/theme.mp3" type="AudioStream" id=11]
+[ext_resource path="res://demos/adventure/sounds/soundtrack/lazy_morning.wav" type="AudioStream" id=11]
+[ext_resource path="res://demos/adventure/Debug.gd" type="Script" id=12]
+[ext_resource path="res://demos/adventure/textures/broken_glass.jpg" type="Texture" id=13]
+[ext_resource path="res://demos/adventure/mini_game/mini_game_manager.tres" type="Resource" id=14]
+[ext_resource path="res://demos/adventure/mini_game/rythm_game_data.tres" type="Resource" id=15]
+[ext_resource path="res://demos/adventure/landmarks/landmark_fetcher.gd" type="Script" id=16]
+[ext_resource path="res://demos/adventure/landmarks/landmark_manager.tres" type="Resource" id=17]
+[ext_resource path="res://demos/adventure/actor_fetcher.gd" type="Script" id=18]
+[ext_resource path="res://demos/adventure/navigation/navigation_manager.tres" type="Resource" id=19]
+[ext_resource path="res://demos/adventure/player/m.hat.tres" type="Resource" id=20]
+[ext_resource path="res://demos/adventure/actors/goblin.tres" type="Resource" id=21]
+[ext_resource path="res://demos/adventure/dog/dog.tres" type="Resource" id=22]
+[ext_resource path="res://demos/adventure/actors/actor_manager.tres" type="Resource" id=23]
+[ext_resource path="res://demos/adventure/actors/jeanpierre/jeanpierre.tres" type="Resource" id=24]
+[ext_resource path="res://demos/adventure/mini_game/volley_game_data.tres" type="Resource" id=25]
+[ext_resource path="res://demos/adventure/camera_system/camera_system.gd" type="Script" id=26]
+[ext_resource path="res://demos/adventure/camera_system/camera_manager.tres" type="Resource" id=27]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -26,11 +42,57 @@ void fragment(){
 shader = SubResource( 1 )
 shader_param/opening = 0.5
 
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform vec2 r_displacement = vec2(3.0, 0.0);
+uniform vec2 g_displacement = vec2(0.0, 0.0);
+uniform vec2 b_displacement = vec2(-3.0, 0.0);
+uniform float blur_amount = 0.5;
+
+uniform sampler2D glass_texture;
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float fblendScreen(float base, float blend) {
+	return 1.0-((1.0-base)*(1.0-blend));
+}
+
+vec3 vblendScreen(vec3 base, vec3 blend) {
+	return vec3(fblendScreen(base.r,blend.r),fblendScreen(base.g,blend.g),fblendScreen(base.b,blend.b));
+}
+
+void fragment()
+{
+	float dist = distance(UV, vec2(.5, .5));
+	float blur = dist * blur_amount;
+	float r = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*r_displacement * dist), blur).r;
+	float g = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*g_displacement * dist), blur).g;
+	float b = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*b_displacement * dist), blur).b;
+	vec3 glass = texture(glass_texture, UV).rgb;
+	vec3 c = vec3(r, g, b);
+	float l = smoothstep(luma(c), 0.0, 0.2);
+	vec3 final = vblendScreen(c, glass);
+	COLOR = vec4(mix(c, final, l * .5), 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/r_displacement = Vector2( 4, 4 )
+shader_param/g_displacement = Vector2( 0, 0 )
+shader_param/b_displacement = Vector2( -8, -4 )
+shader_param/blur_amount = 1.0
+shader_param/glass_texture = ExtResource( 13 )
+
 [node name="MainAdventure" type="Node"]
 script = ExtResource( 1 )
 player_scene = ExtResource( 5 )
 story_manager = ExtResource( 2 )
 known_locations = [ ExtResource( 3 ), ExtResource( 10 ) ]
+landmark_manager = ExtResource( 17 )
+navigation_manager = ExtResource( 19 )
 
 [node name="JoyMap" type="Node" parent="."]
 script = ExtResource( 4 )
@@ -38,14 +100,32 @@ type = "keyboard"
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="FocusViewer" parent="UI" instance=ExtResource( 7 )]
-main_focus_manager = ExtResource( 6 )
-dialogue_manager = ExtResource( 9 )
-
 [node name="DialogueViewer" parent="UI" instance=ExtResource( 8 )]
-story_manager = ExtResource( 2 )
 
 [node name="Tween" type="Tween" parent="UI"]
+
+[node name="Debug" type="Label" parent="UI"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 64.0
+margin_bottom = 38.0
+script = ExtResource( 12 )
+
+[node name="FocusViewer" parent="UI" instance=ExtResource( 7 )]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -61.5
+margin_top = -89.0
+margin_right = 61.5
+margin_bottom = -35.0
+main_focus_manager = ExtResource( 6 )
+story_manager = ExtResource( 2 )
+
+[node name="CenterContainer" type="CenterContainer" parent="UI"]
+margin_right = 40.0
+margin_bottom = 40.0
 
 [node name="TransitionRect" type="ColorRect" parent="UI"]
 material = SubResource( 2 )
@@ -53,8 +133,38 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
 
+[node name="minigameController" type="Node" parent="."]
+script = ExtResource( 9 )
+known_mini_games = [ ExtResource( 15 ), ExtResource( 25 ) ]
+mini_game_manager = ExtResource( 14 )
+
 [node name="SoundTrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )
-autoplay = true
+volume_db = -20.0
 
-[node name="SceneHolder" type="Node2D" parent="."]
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="LandmarkFetcher" type="Node" parent="."]
+script = ExtResource( 16 )
+landmark_manager = ExtResource( 17 )
+
+[node name="ActorFetcher" type="Node" parent="."]
+script = ExtResource( 18 )
+known_actors = [ ExtResource( 21 ), ExtResource( 20 ), ExtResource( 22 ), ExtResource( 24 ) ]
+actor_manager = ExtResource( 23 )
+
+[node name="CameraSystem" type="Spatial" parent="."]
+script = ExtResource( 26 )
+camera_manager = ExtResource( 27 )
+
+[node name="TransitionCamera" type="Camera" parent="CameraSystem"]
+
+[node name="CameraTween" type="Tween" parent="CameraSystem"]
+
+[node name="SceneHolder" type="Spatial" parent="."]
+
+[connection signal="location_changed" from="." to="LandmarkFetcher" method="_on_MainAdventure_location_changed"]
+[connection signal="location_changed" from="." to="CameraSystem" method="fetch_cameras"]
