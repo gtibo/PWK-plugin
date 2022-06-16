@@ -1,9 +1,15 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://demos/bomber/Bomb/Bomb.gd" type="Script" id=1]
-[ext_resource path="res://demos/bomber/Bomb/Sprites/1650921417478-74116550.png" type="Texture" id=2]
-[ext_resource path="res://demos/bomber/Manager/RuleManager.tres" type="Resource" id=3]
-[ext_resource path="res://demos/bomber/Bomb/Sprites/1650921458581-139403219.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/sounds/positional_sfx_manager.tres" type="Resource" id=2]
+[ext_resource path="res://demos/bomber/Manager/ruler_manager.tres" type="Resource" id=3]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/idle/bomb-idle-0004.png" type="Texture" id=10]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/idle/bomb-idle-0000.png" type="Texture" id=11]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/idle/bomb-idle-0016.png" type="Texture" id=12]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/idle/bomb-idle-0008.png" type="Texture" id=13]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/idle/bomb-idle-0012.png" type="Texture" id=14]
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=15]
+[ext_resource path="res://demos/bomber/textures/Paper_Wrinkled_001_ambientOcclusion.jpg" type="Texture" id=16]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 23.0217
@@ -11,18 +17,51 @@ radius = 23.0217
 [sub_resource type="CircleShape2D" id=2]
 radius = 28.0713
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform sampler2D water_color_sampler;
+uniform sampler2D paper_wrinkle_sampler;
+
+void fragment(){
+	
+	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.642,
+		UV.y - tick * 1.842
+	);
+	
+	
+	vec4 paper_wrinkle_texture = texture(paper_wrinkle_sampler, uv_move);
+	vec4 water_color_texture = texture(water_color_sampler, uv_move);
+	
+	vec4 t = texture(TEXTURE, UV);
+	vec3 final_color = t.rgb;
+
+	COLOR.rgb = final_color * mix(final_color, vec3(1.0), smoothstep(0.15, 0.35, water_color_texture.x)) * paper_wrinkle_texture.x;
+	COLOR.a = t.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/water_color_sampler = ExtResource( 15 )
+shader_param/paper_wrinkle_sampler = ExtResource( 16 )
+
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 11 ), ExtResource( 10 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 12 ) ],
 "loop": true,
-"name": "default",
-"speed": 5.0
+"name": "Idle",
+"speed": 6.0
 } ]
 
 [node name="Bomb" type="KinematicBody2D"]
 collision_mask = 2
 script = ExtResource( 1 )
 RuleManager = ExtResource( 3 )
+main_positional_sfx_manager = ExtResource( 2 )
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -36,10 +75,11 @@ shape = SubResource( 2 )
 wait_time = 2.0
 one_shot = true
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( -7, 4 )
-scale = Vector2( 0.128, 0.128 )
-frames = SubResource( 3 )
+[node name="Sprite" type="AnimatedSprite" parent="."]
+material = SubResource( 6 )
+scale = Vector2( 0.157407, 0.157407 )
+frames = SubResource( 4 )
+animation = "Idle"
 frame = 1
 playing = true
 

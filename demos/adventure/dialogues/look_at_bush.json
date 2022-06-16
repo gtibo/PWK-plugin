@@ -1,0 +1,15 @@
+{
+  "0": {
+    "actor": "m.hat",
+    "lines": [
+      "That's a bush..."
+    ],
+    "next": "1"
+  },
+  "1": {
+    "actor": "jp",
+    "lines": [
+      "Hihi!"
+    ]
+  }
+}

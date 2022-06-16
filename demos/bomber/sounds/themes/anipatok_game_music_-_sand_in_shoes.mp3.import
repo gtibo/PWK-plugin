@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/anipatok_game_music_-_sand_in_shoes.mp3-2026cf181cbc2bd9b7c02534d0856f87.mp3str"
+
+[deps]
+
+source_file="res://demos/bomber/sounds/themes/anipatok_game_music_-_sand_in_shoes.mp3"
+dest_files=[ "res://.import/anipatok_game_music_-_sand_in_shoes.mp3-2026cf181cbc2bd9b7c02534d0856f87.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

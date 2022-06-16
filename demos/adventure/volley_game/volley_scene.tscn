@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://demos/adventure/volley_game/volley_scene.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/landmarks/landmark_manager.tres" type="Resource" id=2]
@@ -9,9 +9,6 @@
 
 [sub_resource type="SpatialMaterial" id=8]
 albedo_color = Color( 0.517647, 0.247059, 1, 1 )
-
-[sub_resource type="SpatialMaterial" id=6]
-albedo_color = Color( 1, 0, 0, 1 )
 
 [sub_resource type="BoxShape" id=3]
 extents = Vector3( 4, 1, 1 )
@@ -67,13 +64,6 @@ one_shot = true
 [node name="desiredTarget" type="CSGSphere" parent="TerrainRoot"]
 material_override = SubResource( 8 )
 radius = 0.2
-
-[node name="TestTarget" type="Position3D" parent="TerrainRoot"]
-visible = false
-
-[node name="CSGSphere" type="CSGSphere" parent="TerrainRoot/TestTarget"]
-material_override = SubResource( 6 )
-radius = 0.24622
 
 [node name="StaticBody" type="StaticBody" parent="TerrainRoot"]
 

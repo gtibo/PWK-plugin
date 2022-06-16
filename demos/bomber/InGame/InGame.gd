@@ -7,7 +7,6 @@ signal end
 
 func _ready():
 	var player_list = spawn_players()
-	RuleManager.connect("victory", self, "on_victory")
 	RuleManager.set_player_list(player_list)
 	
 func spawn_players():
@@ -25,5 +24,5 @@ func spawn_players():
 		$Players.add_child(new_player)
 	return players
 
-func on_victory(_player):
+func _on_WinScreen_announcer_end():
 	emit_signal("end")

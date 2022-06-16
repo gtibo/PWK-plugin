@@ -12,6 +12,7 @@ var velocity = Vector3.ZERO
 var input_vel : Vector2 = Vector2.ZERO
 
 func _ready():
+	#max_speed = 2
 	set_controller_index(controller_index)
 	story_manager.connect("action_started", self, "lock")
 	story_manager.connect("action_ended", self, "unlock")

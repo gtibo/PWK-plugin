@@ -1,4 +1,5 @@
 extends Node
+export(Resource) var story_manager
 export(Resource) var dialogue_manager
 export(Resource) var actor_manager
 

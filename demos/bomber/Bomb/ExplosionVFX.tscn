@@ -1,74 +1,62 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://demos/bomber/Bomb/Sprites/1650974114826-381003054.png" type="Texture" id=1]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0006.png" type="Texture" id=1]
 [ext_resource path="res://demos/bomber/Bomb/ExplosionVFX.gd" type="Script" id=2]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0004.png" type="Texture" id=3]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0012.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0008.png" type="Texture" id=5]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0010.png" type="Texture" id=6]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0002.png" type="Texture" id=7]
+[ext_resource path="res://demos/bomber/Bomb/Sprites/explosion/explosion-0000.png" type="Texture" id=8]
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=9]
+[ext_resource path="res://demos/bomber/textures/Paper_Wrinkled_001_ambientOcclusion.jpg" type="Texture" id=10]
 
-[sub_resource type="Animation" id=1]
-resource_name = "Boom"
-length = 0.3
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 1, 1 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.05, 0.15 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
-}
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
 
-[sub_resource type="Animation" id=2]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( 0.144, 0.144 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ) ]
-}
+uniform sampler2D water_color_sampler;
+uniform sampler2D paper_wrinkle_sampler;
+
+void fragment(){
+	
+	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.642,
+		UV.y - tick * 1.842
+	);
+	
+	
+	vec4 paper_wrinkle_texture = texture(paper_wrinkle_sampler, uv_move);
+	vec4 water_color_texture = texture(water_color_sampler, uv_move);
+	
+	vec4 t = texture(TEXTURE, UV);
+	vec3 final_color = t.rgb;
+
+	COLOR.rgb = final_color * mix(final_color, vec3(1.0), smoothstep(0.15, 0.35, water_color_texture.x)) * paper_wrinkle_texture.x;
+	COLOR.a = t.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 7 )
+shader_param/water_color_sampler = ExtResource( 9 )
+shader_param/paper_wrinkle_sampler = ExtResource( 10 )
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 8 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 12.0
+} ]
 
 [node name="ExplosionVFX" type="Node2D"]
 scale = Vector2( 0.6, 0.6 )
 script = ExtResource( 2 )
 
-[node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.144, 0.144 )
-texture = ExtResource( 1 )
+[node name="Sprite" type="AnimatedSprite" parent="."]
+material = SubResource( 6 )
+frames = SubResource( 1 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Boom = SubResource( 1 )
-anims/RESET = SubResource( 2 )
-
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="Sprite" to="." method="_on_Sprite_animation_finished"]

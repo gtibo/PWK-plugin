@@ -1,9 +1,8 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://demos/adventure/main_adventure.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/storyManager.tres" type="Resource" id=2]
 [ext_resource path="res://demos/adventure/locations/house_data.tres" type="Resource" id=3]
-[ext_resource path="res://addons/PWK/nodes/util/JoyMap.gd" type="Script" id=4]
 [ext_resource path="res://demos/adventure/player/player_actor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://demos/adventure/focus_manager/focus_manager.tres" type="Resource" id=6]
 [ext_resource path="res://demos/adventure/focus_manager/focus_viewer.tscn" type="PackedScene" id=7]
@@ -11,7 +10,6 @@
 [ext_resource path="res://demos/adventure/minigameDisplay.gd" type="Script" id=9]
 [ext_resource path="res://demos/adventure/locations/outside_data.tres" type="Resource" id=10]
 [ext_resource path="res://demos/adventure/sounds/soundtrack/lazy_morning.wav" type="AudioStream" id=11]
-[ext_resource path="res://demos/adventure/Debug.gd" type="Script" id=12]
 [ext_resource path="res://demos/adventure/textures/broken_glass.jpg" type="Texture" id=13]
 [ext_resource path="res://demos/adventure/mini_game/mini_game_manager.tres" type="Resource" id=14]
 [ext_resource path="res://demos/adventure/mini_game/rythm_game_data.tres" type="Resource" id=15]
@@ -94,22 +92,11 @@ known_locations = [ ExtResource( 3 ), ExtResource( 10 ) ]
 landmark_manager = ExtResource( 17 )
 navigation_manager = ExtResource( 19 )
 
-[node name="JoyMap" type="Node" parent="."]
-script = ExtResource( 4 )
-type = "keyboard"
-
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="DialogueViewer" parent="UI" instance=ExtResource( 8 )]
 
 [node name="Tween" type="Tween" parent="UI"]
-
-[node name="Debug" type="Label" parent="UI"]
-margin_left = 24.0
-margin_top = 24.0
-margin_right = 64.0
-margin_bottom = 38.0
-script = ExtResource( 12 )
 
 [node name="FocusViewer" parent="UI" instance=ExtResource( 7 )]
 anchor_left = 0.5
@@ -133,11 +120,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
 
-[node name="minigameController" type="Node" parent="."]
-script = ExtResource( 9 )
-known_mini_games = [ ExtResource( 15 ), ExtResource( 25 ) ]
-mini_game_manager = ExtResource( 14 )
-
 [node name="SoundTrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )
 volume_db = -20.0
@@ -146,6 +128,11 @@ volume_db = -20.0
 material = SubResource( 4 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="minigameController" type="Node" parent="."]
+script = ExtResource( 9 )
+known_mini_games = [ ExtResource( 15 ), ExtResource( 25 ) ]
+mini_game_manager = ExtResource( 14 )
 
 [node name="LandmarkFetcher" type="Node" parent="."]
 script = ExtResource( 16 )

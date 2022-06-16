@@ -1,75 +1,53 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://demos/bomber/HUD/punch_icon.png" type="Texture" id=1]
+[ext_resource path="res://demos/bomber/HUD/bomb_icon/bomb-icon-0000.png" type="Texture" id=1]
 [ext_resource path="res://demos/bomber/HUD/HUDicon.gd" type="Script" id=2]
+[ext_resource path="res://demos/bomber/textures/Paper_Wrinkled_001_ambientOcclusion.jpg" type="Texture" id=3]
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/HUD/bomb_icon/bomb-icon-0008.png" type="Texture" id=5]
+[ext_resource path="res://demos/bomber/HUD/bomb_icon/bomb-icon-0002.png" type="Texture" id=6]
+[ext_resource path="res://demos/bomber/HUD/bomb_icon/bomb-icon-0004.png" type="Texture" id=7]
+[ext_resource path="res://demos/bomber/HUD/bomb_icon/bomb-icon-0006.png" type="Texture" id=8]
 
-[sub_resource type="AnimationNodeAnimation" id=13]
-animation = "Grow"
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
 
-[sub_resource type="AnimationNodeAnimation" id=7]
-animation = "RESET"
+uniform sampler2D water_color_sampler;
+uniform sampler2D paper_wrinkle_sampler;
 
-[sub_resource type="AnimationNodeAnimation" id=10]
-animation = "Shake"
+void fragment(){
+	
+	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.642,
+		UV.y - tick * 1.842
+	);
+	
+	
+	vec4 paper_wrinkle_texture = texture(paper_wrinkle_sampler, uv_move);
+	vec4 water_color_texture = texture(water_color_sampler, uv_move);
+	
+	vec4 t = texture(TEXTURE, UV);
+	vec3 final_color = t.rgb;
 
-[sub_resource type="AnimationNodeAnimation" id=8]
-animation = "Shrink"
+	COLOR.rgb = final_color * mix(final_color, vec3(1.0), smoothstep(0.15, 0.35, water_color_texture.x)) * paper_wrinkle_texture.x;
+	COLOR.a = t.a;
+}"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=9]
-advance_condition = "disable"
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/water_color_sampler = ExtResource( 4 )
+shader_param/paper_wrinkle_sampler = ExtResource( 3 )
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=11]
-switch_mode = 2
-auto_advance = true
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=14]
-advance_condition = "enable"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=15]
-switch_mode = 2
-auto_advance = true
-
-[sub_resource type="AnimationNodeStateMachine" id=6]
-states/Grow/node = SubResource( 13 )
-states/Grow/position = Vector2( 463, 149 )
-states/RESET/node = SubResource( 7 )
-states/RESET/position = Vector2( 315, 54 )
-states/Shake/node = SubResource( 10 )
-states/Shake/position = Vector2( 315, 149 )
-states/Shrink/node = SubResource( 8 )
-states/Shrink/position = Vector2( 522, 54 )
-transitions = [ "RESET", "Shrink", SubResource( 9 ), "Shake", "RESET", SubResource( 11 ), "Shrink", "Grow", SubResource( 14 ), "Grow", "Shake", SubResource( 15 ) ]
-start_node = "RESET"
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=2]
-
-[sub_resource type="Animation" id=12]
-resource_name = "Grow"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:rect_scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0.4, 0.4 ), Vector2( 1, 1 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0.439216 ), Color( 1, 1, 1, 1 ) ]
-}
+[sub_resource type="SpriteFrames" id=18]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 12.0
+} ]
 
 [sub_resource type="Animation" id=3]
 length = 0.001
@@ -110,11 +88,10 @@ tracks/2/keys = {
 "values": [ 0.0 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "Shake"
+[sub_resource type="Animation" id=17]
 length = 0.5
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:rect_rotation")
+tracks/0/path = NodePath(".:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -130,49 +107,46 @@ tracks/0/keys = {
 resource_name = "Shrink"
 length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:rect_scale")
+tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3 ),
-"transitions": PoolRealArray( 2, 1 ),
-"update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 0.4, 0.4 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
 "times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.439216 ) ]
 }
 
-[node name="PunchIcon" type="TextureRect"]
-margin_right = 64.0
-margin_bottom = 64.0
-rect_min_size = Vector2( 64, 64 )
-rect_pivot_offset = Vector2( 32, 32 )
-texture = ExtResource( 1 )
-expand = true
+[sub_resource type="Animation" id=12]
+resource_name = "fade"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.439216 ), Color( 1, 1, 1, 0.439216 ) ]
+}
+
+[node name="HUDicon" type="AnimatedSprite"]
+material = SubResource( 6 )
+scale = Vector2( 0.15, 0.15 )
+frames = SubResource( 18 )
+frame = 4
+playing = true
 script = ExtResource( 2 )
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 6 )
-anim_player = NodePath("../AnimationPlayer")
-active = true
-parameters/playback = SubResource( 2 )
-parameters/conditions/disable = false
-parameters/conditions/enable = false
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Grow = SubResource( 12 )
 anims/RESET = SubResource( 3 )
-anims/Shake = SubResource( 5 )
+anims/Shake = SubResource( 17 )
 anims/Shrink = SubResource( 4 )
+anims/fade = SubResource( 12 )
+
+[node name="Tween" type="Tween" parent="."]

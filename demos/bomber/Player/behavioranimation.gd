@@ -1,40 +1,33 @@
 extends AnimationTree
 
-	
+export(NodePath) onready var sprite = get_node(sprite) as ColorRect
+
+onready var state_machine = self["parameters/action/playback"]
+
+
 func _on_StateMachine_transitioned(state_name):
-	if state_name == "Run":
-		self["parameters/conditions/run"] = true
-		self["parameters/conditions/idle"] = false
-		self["parameters/conditions/jump"] = false
-		self["parameters/conditions/slide"] = false
-		
-		
-	if state_name == "Idle":
-		self["parameters/conditions/run"] = false
-		self["parameters/conditions/idle"] = true
-		self["parameters/conditions/jump"] = false
-		self["parameters/conditions/slide"] = false
-		
-		
-	if state_name == "Air":
-		self["parameters/conditions/jump"] = true
-		self["parameters/conditions/idle"] = false
-		self["parameters/conditions/run"] = false
-		self["parameters/conditions/slide"] = false
-		
-	
-	if state_name == "Slide":
-		self["parameters/conditions/slide"] = true
-		self["parameters/conditions/jump"] = false
-		self["parameters/conditions/idle"] = false
-		self["parameters/conditions/run"] = false
-		
-func _on_Player_changeDirection(direction):
-	if direction > 0:
-		get_node("../TextureRect").flip_h = true
-	else:
-		get_node("../TextureRect").flip_h = false
+	match state_name:
+		"Idle":
+			state_machine.travel("Idle")
+		"Run":
+			state_machine.travel("Run")
+		"Slide":
+			state_machine.travel("Slide")
+		"KO":
+			state_machine.travel("Fall")
+		"Stunned":
+			state_machine.travel("Fall")
+		"Dance":
+			state_machine.travel("Idle")
+					
+func _on_Air_fall():
+	state_machine.travel("Fall")
+
+func _on_Air_jump():
+	state_machine.travel("Jump")
 
 func _on_Player_punch():
-	var state_machine = self["parameters/playback"]
-	state_machine.travel("Punch")
+	self.set("parameters/punch/active", true)
+
+func _on_Player_changeDirection(direction):
+	sprite.material.set_shader_param("flip", direction > 0)

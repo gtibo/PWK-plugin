@@ -27,9 +27,8 @@ func desactivate():
 	$AnimationPlayer.play_backwards("open")
 	
 func on_focus(zone_name):
-	if !active: return
-	check_size()
 	action_name_label.text = zone_name
+	if !active: return
 	$AnimationPlayer.play("open")
 	
 func on_defocus():

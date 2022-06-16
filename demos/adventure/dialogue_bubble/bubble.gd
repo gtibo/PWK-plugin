@@ -36,6 +36,10 @@ func close():
 	emit_signal("closed")
 	actor_anchor = null
 
+func set_color(color):
+	bubble_effect.color = color
+	bubble_tail.color = color
+	
 func set_choices(choices_list : Array):
 	yield(self, "wrote")
 	choice_container.show()

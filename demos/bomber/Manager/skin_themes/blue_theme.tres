@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://demos/bomber/Manager/CharaThemebuilder.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+stroke = Color( 0.0745098, 0.054902, 0.0588235, 1 )
+main = Color( 0.623529, 0.298039, 0.211765, 1 )
+second = Color( 0.901961, 0.635294, 0.447059, 1 )
+name = "Berry"

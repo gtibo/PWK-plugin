@@ -1,0 +1,355 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://addons/PWK/nodes/util/joy_map.gd" type="Script" id=1]
+[ext_resource path="res://watercolor_correction.png" type="Texture" id=2]
+[ext_resource path="res://demos/home/states/home_state.gd" type="Script" id=3]
+[ext_resource path="res://addons/PWK/nodes/StateMachine/StateMachine.gd" type="Script" id=4]
+[ext_resource path="res://demos/home/game_selection.tscn" type="PackedScene" id=5]
+[ext_resource path="res://demos/home/states/selection_state.gd" type="Script" id=6]
+[ext_resource path="res://demos/home/main_home.gd" type="Script" id=7]
+[ext_resource path="res://demos/home/footer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://demos/home/sfx/ObservingTheStar.ogg" type="AudioStream" id=9]
+[ext_resource path="res://demos/home/UISFXManager.gd" type="Script" id=10]
+[ext_resource path="res://demos/home/sfx/sfx_manager.tres" type="Resource" id=11]
+[ext_resource path="res://demos/home/sfx/sfx_data/click_sfx.tres" type="Resource" id=12]
+[ext_resource path="res://demos/home/sfx/sfx_data/open_sfx.tres" type="Resource" id=13]
+[ext_resource path="res://demos/home/sfx/sfx_data/pop_sfx.tres" type="Resource" id=14]
+[ext_resource path="res://demos/home/states/ingame_state.gd" type="Script" id=15]
+[ext_resource path="res://demos/home/states/pause_state.gd" type="Script" id=16]
+[ext_resource path="res://demos/home/action_icon/icons_data/y_icon_data.tres" type="Resource" id=17]
+[ext_resource path="res://demos/home/action_icon/icons_data/a_icon_data.tres" type="Resource" id=18]
+[ext_resource path="res://demos/home/action_icon/icons_data/arrows_icon_data.tres" type="Resource" id=19]
+[ext_resource path="res://demos/home/action_icon/icons_data/b_icon_data.tres" type="Resource" id=20]
+[ext_resource path="res://demos/home/action_icon/icons_data/x_icon_data.tres" type="Resource" id=21]
+[ext_resource path="res://demos/home/action_icon/icons_data/select_icon_data.tres" type="Resource" id=22]
+[ext_resource path="res://demos/home/game_info.tscn" type="PackedScene" id=23]
+[ext_resource path="res://addons/PWK/RedHatDisplay-Regular.ttf" type="DynamicFontData" id=24]
+[ext_resource path="res://addons/PWK/fps_display.gd" type="Script" id=25]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform vec4 gradient_tint : hint_color;
+uniform vec4 bg_tint : hint_color;
+
+uniform float blur_amount = 0.2;
+uniform float zoom = 0.0;
+uniform float effect_amount = 0.0;
+
+void fragment(){
+	float gradient = smoothstep(0.0, 1.0, 1.0 - UV.x) * bg_tint.a;
+	
+	vec3 screen_texture = texture(SCREEN_TEXTURE, SCREEN_UV * (1.0 - zoom) + vec2(zoom/2.0), blur_amount).rgb;
+	
+	vec3 bg_color = screen_texture * gradient_tint.rgb;
+	vec3 effect_color = mix(bg_color, bg_tint.rgb, gradient);
+	
+	COLOR.rgb = mix(effect_color, screen_texture, effect_amount);
+	
+	COLOR.a = 1.0;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/gradient_tint = Color( 0.196078, 0.0941176, 0.188235, 1 )
+shader_param/bg_tint = Color( 0.392157, 0.541176, 0.984314, 0.219608 )
+shader_param/blur_amount = 0.0
+shader_param/zoom = 0.0
+shader_param/effect_amount = 1.0
+
+[sub_resource type="DynamicFont" id=6]
+size = 48
+font_data = ExtResource( 24 )
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Blur:material:shader_param/blur_amount")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blur:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Blur:material:shader_param/zoom")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Blur:material:shader_param/effect_amount")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("BlackRect:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("BlackRect:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "blur"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Blur:material:shader_param/blur_amount")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 2.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Blur:material:shader_param/zoom")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.1 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Blur:material:shader_param/effect_amount")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "hide_menu"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("BlackRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Home" type="Node"]
+pause_mode = 2
+script = ExtResource( 7 )
+animation_player = NodePath("CanvasLayer/Menu/AnimationPlayer")
+footer = NodePath("CanvasLayer/Menu/VBoxContainer/Footer")
+main_sfx_manager = ExtResource( 11 )
+
+[node name="Theme" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+pitch_scale = 0.5
+
+[node name="UISFXManager" type="Node" parent="."]
+script = ExtResource( 10 )
+main_sfx_manager = ExtResource( 11 )
+known_sfx = [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ) ]
+
+[node name="JoyMap" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[node name="JoyMap2" type="Node" parent="."]
+script = ExtResource( 1 )
+controller_index = 1
+
+[node name="JoyMap3" type="Node" parent="."]
+script = ExtResource( 1 )
+controller_index = 2
+
+[node name="JoyMap4" type="Node" parent="."]
+script = ExtResource( 1 )
+controller_index = 3
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 4 )
+initial_state = NodePath("Home")
+
+[node name="Home" type="Node" parent="StateMachine"]
+script = ExtResource( 3 )
+bg = NodePath("../../CanvasLayer/Menu/DefaultBG")
+
+[node name="Selection" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+blur_node = NodePath("../../CanvasLayer/Menu/Blur")
+game_selection = NodePath("../../CanvasLayer/Menu/VBoxContainer/Main/GameSelection")
+game_info = NodePath("../../CanvasLayer/Menu/VBoxContainer/Main/PauseScreen/GameInfo")
+bg = NodePath("../../CanvasLayer/Menu/DefaultBG")
+main_sfx_manager = ExtResource( 11 )
+
+[node name="InGame" type="Node" parent="StateMachine"]
+script = ExtResource( 15 )
+game_holder = NodePath("../../GameHolder")
+
+[node name="Pause" type="Node" parent="StateMachine"]
+script = ExtResource( 16 )
+game_holder = NodePath("../../GameHolder")
+pause_screen = NodePath("../../CanvasLayer/Menu/VBoxContainer/Main/PauseScreen")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Menu" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="DefaultBG" type="TextureRect" parent="CanvasLayer/Menu"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 7
+
+[node name="Blur" type="ColorRect" parent="CanvasLayer/Menu"]
+material = SubResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 55.0
+margin_top = 57.0
+margin_right = -55.0
+margin_bottom = -57.0
+
+[node name="Main" type="Control" parent="CanvasLayer/Menu/VBoxContainer"]
+margin_right = 1810.0
+margin_bottom = 874.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GameSelection" parent="CanvasLayer/Menu/VBoxContainer/Main" instance=ExtResource( 5 )]
+visible = false
+
+[node name="PauseScreen" type="Control" parent="CanvasLayer/Menu/VBoxContainer/Main"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GameInfo" parent="CanvasLayer/Menu/VBoxContainer/Main/PauseScreen" instance=ExtResource( 23 )]
+margin_left = 366.0
+margin_top = 234.0
+margin_right = -365.0
+margin_bottom = -133.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Menu/VBoxContainer/Main/PauseScreen"]
+modulate = Color( 1, 1, 1, 0.588235 )
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -53.5
+margin_top = 110.0
+margin_right = 53.5
+margin_bottom = 124.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_fonts/font = SubResource( 6 )
+text = "Currently playing"
+align = 1
+valign = 1
+
+[node name="Footer" parent="CanvasLayer/Menu/VBoxContainer" instance=ExtResource( 8 )]
+margin_top = 878.0
+margin_right = 1810.0
+margin_bottom = 966.0
+known_icons = [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 17 ), ExtResource( 22 ) ]
+
+[node name="BlackRect" type="ColorRect" parent="CanvasLayer/Menu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Menu"]
+anims/RESET = SubResource( 4 )
+anims/blur = SubResource( 3 )
+anims/hide_menu = SubResource( 5 )
+
+[node name="FPSDisplay" type="Label" parent="CanvasLayer"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 64.0
+margin_bottom = 38.0
+script = ExtResource( 25 )
+
+[node name="GameHolder" type="Node" parent="."]
+pause_mode = 1
+
+[connection signal="transitioned" from="StateMachine" to="." method="_on_StateMachine_transitioned"]

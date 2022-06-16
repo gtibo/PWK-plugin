@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://demos/home/game_data/tomato/tomato_quest_vignette.png" type="Texture" id=1]
+[ext_resource path="res://demos/home/game_data/game_data_builder.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+game_name = "Tomato quest"
+game_synopsis = "Desmond's desire for his favorite dish will take him on a strange journey."
+game_technical_info = "This game illustrates the creative capabilities of the narrative system. It divides the story elements into acts, actors, dialogues, and actions. Presented in a headless format, the temporality, actions, and logic are accessible via a custom parser. "
+player_count = "1 Player"
+vignette = ExtResource( 1 )
+main_scene_path = "res://demos/adventure/main_adventure.tscn"

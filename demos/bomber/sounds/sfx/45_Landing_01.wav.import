@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/45_Landing_01.wav-0c37d0168a942d366d79e6dd2e24f0bb.sample"
+
+[deps]
+
+source_file="res://demos/bomber/sounds/sfx/45_Landing_01.wav"
+dest_files=[ "res://.import/45_Landing_01.wav-0c37d0168a942d366d79e6dd2e24f0bb.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

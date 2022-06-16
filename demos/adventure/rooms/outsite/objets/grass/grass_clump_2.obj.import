@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/grass_clump_2.obj-33a9389eaa6db2cae9f032bd625dcf99.mesh"
+
+[deps]
+
+files=[ "res://.import/grass_clump_2.obj-33a9389eaa6db2cae9f032bd625dcf99.mesh" ]
+
+source_file="res://demos/adventure/rooms/outsite/objets/grass/grass_clump_2.obj"
+dest_files=[ "res://.import/grass_clump_2.obj-33a9389eaa6db2cae9f032bd625dcf99.mesh", "res://.import/grass_clump_2.obj-33a9389eaa6db2cae9f032bd625dcf99.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

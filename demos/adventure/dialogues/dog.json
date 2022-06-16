@@ -35,11 +35,22 @@
     ],
     "return": "pet"
   },
-  "4": {
+  "4":{
+    "condition":"pettedDog",
+    "positive": "5",
+    "negative": "6"
+  },
+  "5": {
     "actor": "dog",
     "lines": [
       "Sure! Follow me!"
     ],
     "return": "follow"
+  },
+  "6": {
+    "actor": "dog",
+    "lines": [
+      "Dude, who are you again?"
+    ]
   }
 }

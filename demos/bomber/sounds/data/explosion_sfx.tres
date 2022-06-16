@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://demos/home/sfx/sfx_data_builder.gd" type="Script" id=1]
+[ext_resource path="res://demos/bomber/sounds/sfx/boom6.wav" type="AudioStream" id=2]
+
+[resource]
+script = ExtResource( 1 )
+id = "explosion"
+sound = ExtResource( 2 )
+db = 0.0

@@ -1,0 +1,151 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://demos/bomber/menu/menu.gd" type="Script" id=1]
+[ext_resource path="res://demos/bomber/Manager/ruler_manager.tres" type="Resource" id=2]
+[ext_resource path="res://demos/bomber/menu/player_marker.tscn" type="PackedScene" id=3]
+[ext_resource path="res://demos/bomber/menu/control_map.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/menu/banana_pattern.png" type="Texture" id=5]
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=6]
+[ext_resource path="res://demos/bomber/menu/logo_simple.png" type="Texture" id=7]
+[ext_resource path="res://demos/bomber/textures/Paper_Wrinkled_001_ambientOcclusion.jpg" type="Texture" id=27]
+
+[sub_resource type="Shader" id=12]
+code = "shader_type canvas_item;
+
+uniform sampler2D water_color_sampler;
+uniform vec4 main_color : hint_color = vec4(1.0);
+uniform vec4 second_color : hint_color = vec4(1.0);
+
+void fragment(){
+	float tick = mod(round(TIME * 2.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.36,
+		UV.y - tick * 1.12
+	);
+	
+	float water_color_fac = texture(water_color_sampler, uv_move).x;
+	vec4 shape_texture = texture(TEXTURE, UV * 2.0 - TIME * 0.2);
+	vec3 pattern_color =  mix(main_color.rgb, second_color.rgb, shape_texture.x *  smoothstep(0.2,1.0,distance(SCREEN_UV, vec2(0.5,0.0)) * 0.8 ));
+	COLOR.rgb = pattern_color * mix(pattern_color, vec3(1.0), smoothstep(0.1, 0.4, water_color_fac));
+
+}"
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = SubResource( 12 )
+shader_param/main_color = Color( 0.796078, 0.721569, 0.870588, 1 )
+shader_param/second_color = Color( 0.941176, 0.866667, 0.886275, 1 )
+shader_param/water_color_sampler = ExtResource( 6 )
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform sampler2D water_color_sampler;
+uniform sampler2D paper_wrinkle_sampler;
+
+void fragment(){
+	
+	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.642,
+		UV.y - tick * 1.842
+	);
+	
+	
+	vec4 paper_wrinkle_texture = texture(paper_wrinkle_sampler, uv_move);
+	vec4 water_color_texture = texture(water_color_sampler, uv_move);
+	
+	vec4 t = texture(TEXTURE, UV);
+	vec3 final_color = t.rgb;
+
+	COLOR.rgb = final_color * mix(final_color, vec3(1.0), smoothstep(0.20, 0.35, water_color_texture.x)) * paper_wrinkle_texture.x;
+	COLOR.a = t.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/water_color_sampler = ExtResource( 6 )
+shader_param/paper_wrinkle_sampler = ExtResource( 27 )
+
+[node name="Menu" type="CanvasLayer"]
+script = ExtResource( 1 )
+rule_manager = ExtResource( 2 )
+player_marker_scene = ExtResource( 3 )
+player_display = NodePath("MenuScreen/VBoxContainer/PlayerDisplay")
+
+[node name="MenuScreen" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BG" type="TextureRect" parent="MenuScreen"]
+material = SubResource( 13 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 5 )
+stretch_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuScreen"]
+anchor_left = 0.204102
+anchor_top = 0.108333
+anchor_right = 0.796875
+anchor_bottom = 0.891667
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Logo" type="TextureRect" parent="MenuScreen/VBoxContainer"]
+material = SubResource( 6 )
+margin_right = 606.0
+margin_bottom = 174.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 6
+
+[node name="PlayerDisplay" type="HBoxContainer" parent="MenuScreen/VBoxContainer"]
+margin_top = 190.0
+margin_right = 606.0
+margin_bottom = 470.0
+grow_horizontal = 2
+size_flags_horizontal = 7
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.8
+custom_constants/separation = 32
+
+[node name="ControlScreen" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="ControlScreen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.862745 )
+
+[node name="MarginContainer" type="MarginContainer" parent="ControlScreen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 79.0
+margin_top = 72.0
+margin_right = -79.0
+margin_bottom = -72.0
+custom_constants/margin_right = 32
+custom_constants/margin_top = 32
+custom_constants/margin_left = 32
+custom_constants/margin_bottom = 32
+
+[node name="TextureRect" type="TextureRect" parent="ControlScreen/MarginContainer"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 834.0
+margin_bottom = 424.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6

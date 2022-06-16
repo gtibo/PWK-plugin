@@ -3,6 +3,7 @@ class_name ActorData
 
 export(String) var id
 export(String) var name
+export(Color) var color
 var anchor = null setget set_anchor, get_anchor
 
 func get_anchor():

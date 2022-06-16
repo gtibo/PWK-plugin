@@ -1,13 +1,14 @@
 {
   "name": "The marvelous story of a man with an hat",
-  "start": "outside",
-  "spawn": "outside_door",
+  "start": "house",
+  "spawn": "middle_of_the_room",
   "variables": {
     "hasSocks": false,
     "pettedDog": false,
     "checkedCloset": false,
     "needHelp": true,
-    "checkedDoor": false
+    "checkedDoor": false,
+    "discoveredMan": false
   },
   "locations": {
     "house": {
@@ -115,8 +116,19 @@
     },
     "outside": {
       "actions": {
+        "Bush": {
+          "name": "Inspect bush",
+          "condition": "!discoveredMan",
+          "stack": {
+            "0": {
+              "type": "dialogue",
+              "name": "look_at_bush",
+            }
+          }
+        },
         "JP": {
           "name": "Talk to stranger",
+          "condition": "discoveredMan",
           "stack": {
             "0": {
               "type": "goto",
@@ -171,27 +183,27 @@
               "type": "minigame",
               "name": "rhythm",
               "score": 0,
-              "next": "2"
+              "next": "1.1"
             },
-            "2": {
+            "1.1": {
               "type": "compare",
               "method": "A_GREATER_THAN_B",
               "a": "step_1_score",
               "b": 0.5,
-              "positive": "3",
-              "negative": "4"
+              "positive": "2",
+              "negative": "3"
             },
-            "3": {
+            "2": {
               "type": "dialogue",
               "name": "dog_success",
-              "next": "3.1"
+              "next": "2.1"
             },
-            "3.1": {
+            "2.1": {
               "type": "set",
               "variable": "pettedDog",
               "value": true
             },
-            "4": {
+            "3": {
               "type": "dialogue",
               "name": "dog_fail"
             },
@@ -209,6 +221,12 @@
               "next": "7"
             },
             "7": {
+              "type": "set",
+              "variable": "discoveredMan",
+              "value": true,
+              "next": "8"
+            },
+            "8": {
               "type": "goto",
               "routes": [
                 ["jp", "bush_front"]

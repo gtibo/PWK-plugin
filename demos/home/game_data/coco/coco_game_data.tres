@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://demos/home/game_data/coco/coco_vignette.png" type="Texture" id=1]
+[ext_resource path="res://demos/home/game_data/game_data_builder.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+game_name = "Coco's Island"
+game_synopsis = "Every spring, a tournament is held on the Coco Islands. Challenge other players and find out who is the best fighter."
+game_technical_info = "This demo focuses on the interactive aspect of the kit to create a platform game."
+player_count = "2-4 players"
+vignette = ExtResource( 1 )
+main_scene_path = "res://demos/bomber/Main.tscn"

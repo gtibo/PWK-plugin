@@ -13,11 +13,18 @@ uniform float flip = -1.0;
 
 void fragment(){
 	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.36,
+		UV.y - tick * 1.12
+	);
+	
 	vec2 uv = UV;
 	uv.x *= flip;
 	
 	vec4 color = texture(albedo, uv);
-	vec4 normal = texture(paper_normal, UV);
+	vec4 normal = texture(paper_normal, uv_move);
 	
 	ALBEDO = color.xyz;
 	ALPHA = color.w;

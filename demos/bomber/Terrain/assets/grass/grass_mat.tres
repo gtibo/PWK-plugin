@@ -1,0 +1,29 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=1]
+
+[sub_resource type="Shader" id=10]
+code = "shader_type canvas_item;
+uniform vec4 color : hint_color = vec4(1.0);
+uniform vec4 color2 : hint_color = vec4(1.0);
+
+uniform sampler2D water_color_sampler;
+
+
+void vertex(){
+	VERTEX.x += sin(TIME + UV.y * 2.0) * 100.0 * (1.0-UV.y);
+}
+
+void fragment(){
+	float water_color_fac = texture(water_color_sampler, UV).x;
+	vec4 shape_texture = texture(TEXTURE, UV);
+	vec3 gradient = mix(color.rgb, color2.rgb, UV.y);
+	COLOR.rgb = gradient * mix(gradient, vec3(1.0), smoothstep(0.1, 0.4, water_color_fac));
+	COLOR.a = shape_texture.a * smoothstep(1.0, 0.8, UV.y);
+}"
+
+[resource]
+shader = SubResource( 10 )
+shader_param/color = Color( 0.207843, 0.505882, 0.34902, 1 )
+shader_param/color2 = Color( 0.0980392, 0.278431, 0.184314, 1 )
+shader_param/water_color_sampler = ExtResource( 1 )

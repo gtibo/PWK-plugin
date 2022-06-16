@@ -9,9 +9,7 @@ func switch_scene(scene):
 		yield($Transition/AnimationPlayer, "animation_finished")
 		for child in $SceneHolder.get_children():
 			child.queue_free()
-	
 	$SceneHolder.add_child(scene)
-	
 	$Transition/AnimationPlayer.play_backwards("Open")
 	yield($Transition/AnimationPlayer, "animation_finished")
 	

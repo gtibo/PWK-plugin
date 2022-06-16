@@ -6,3 +6,4 @@
 script = ExtResource( 1 )
 id = "m.hat"
 name = "Man with an hat"
+color = Color( 0.403922, 0.556863, 0.921569, 1 )

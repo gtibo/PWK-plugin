@@ -4,6 +4,7 @@ class_name PlatformerController, "res://addons/PWK/icones/joystick_icon.svg"
 const SPEED = 300.0
 var velocity = Vector2.ZERO
 const TOP_SPEED = 1000.0
+var gravity = 1300.0
 var x_input = 0
 var friction = 10
 var acceleration = 10
@@ -40,7 +41,7 @@ func apply_air_friction(delta):
 	velocity.x = lerp(velocity.x, 0, friction * 0.1 * delta)
 
 func apply_gravity(delta):
-	velocity.y += 1200 * delta
+	velocity.y += gravity * delta
 
 func update_velocity(delta):
 	velocity = move_and_slide_with_snap(velocity, snap_vector, Vector2.UP, true)

@@ -1,26 +1,657 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://demos/bomber/Player/player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/PWK/nodes/util/JoyMap.gd" type="Script" id=6]
+[ext_resource path="res://demos/bomber/Terrain/assets/mountain_1.png" type="Texture" id=2]
+[ext_resource path="res://demos/bomber/textures/dirty_glass.jpg" type="Texture" id=3]
+[ext_resource path="res://demos/bomber/Terrain/assets/grass/grass.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/Terrain/assets/rock.png" type="Texture" id=5]
+[ext_resource path="res://addons/PWK/nodes/util/joy_map.gd" type="Script" id=6]
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=7]
+[ext_resource path="res://demos/bomber/Bomb/Bomb.tscn" type="PackedScene" id=8]
+[ext_resource path="res://demos/bomber/Terrain/assets/grass/grass_mat.tres" type="Material" id=10]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 103, 236 )
+[sub_resource type="Shader" id=29]
+code = "shader_type canvas_item;
+
+uniform vec2 r_displacement = vec2(3.0, 0.0);
+uniform vec2 g_displacement = vec2(0.0, 0.0);
+uniform vec2 b_displacement = vec2(-3.0, 0.0);
+uniform float blur_amount = 0.5;
+
+
+uniform sampler2D glass_texture;
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float fblendScreen(float base, float blend) {
+	return 1.0-((1.0-base)*(1.0-blend));
+}
+
+vec3 vblendScreen(vec3 base, vec3 blend) {
+	return vec3(fblendScreen(base.r,blend.r),fblendScreen(base.g,blend.g),fblendScreen(base.b,blend.b));
+}
+
+void fragment()
+{
+
+	float dist = distance(UV, vec2(.5, .5));
+	float blur = dist * blur_amount;
+	
+	
+	float r = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*r_displacement * dist), blur).r;
+	float g = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*g_displacement * dist), blur).g;
+	float b = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*b_displacement * dist), blur).b;
+	vec3 glass = texture(glass_texture, UV).rgb;
+	
+	
+	vec3 c = vec3(r, g, b);
+	float l = smoothstep(luma(c), 0.0, 0.2);
+	vec3 final = vblendScreen(c, glass);
+	COLOR.rgb = c;
+}"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 29 )
+shader_param/r_displacement = Vector2( 3, 0 )
+shader_param/g_displacement = Vector2( 0, 0 )
+shader_param/b_displacement = Vector2( -3, 0 )
+shader_param/blur_amount = 1.0
+shader_param/glass_texture = ExtResource( 3 )
+
+[sub_resource type="Shader" id=30]
+code = "shader_type canvas_item;
+
+uniform sampler2D water_color_sampler;
+uniform vec4 color : hint_color = vec4(1.0);
+
+void fragment(){
+	float tick = mod(round(TIME * 2.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.36,
+		UV.y - tick * 1.12
+	);
+	
+	float water_color_fac = texture(water_color_sampler, uv_move).x;
+	vec4 shape_texture = texture(TEXTURE, UV);
+	COLOR.rgb = color.rgb * mix(color.rgb, vec3(1.0), smoothstep(0.1, 0.4, water_color_fac));
+	COLOR.a = shape_texture.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=18]
+shader = SubResource( 30 )
+shader_param/color = Color( 0.321569, 0.619608, 0.478431, 1 )
+shader_param/water_color_sampler = ExtResource( 7 )
+
+[sub_resource type="ShaderMaterial" id=19]
+shader = SubResource( 30 )
+shader_param/color = Color( 0.52549, 0.764706, 0.392157, 1 )
+shader_param/water_color_sampler = ExtResource( 7 )
+
+[sub_resource type="Shader" id=28]
+code = "shader_type canvas_item;
+
+uniform sampler2D water_color_sampler;
+uniform vec4 main_color : hint_color = vec4(1.0);
+
+void fragment(){
+	float tick = mod(round(TIME * 2.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.36,
+		UV.y - tick * 1.12
+	);
+	
+	float water_color_fac = texture(water_color_sampler, uv_move).x;
+	vec4 shape_texture = texture(TEXTURE, UV);
+	COLOR.rgb = main_color.rgb * mix(main_color.rgb, vec3(1.0), smoothstep(0.1, 0.4, water_color_fac));
+	COLOR.a = shape_texture.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=23]
+shader = SubResource( 28 )
+shader_param/main_color = Color( 0.556863, 0.27451, 0.160784, 1 )
+shader_param/water_color_sampler = ExtResource( 7 )
+
+[sub_resource type="RectangleShape2D" id=20]
+extents = Vector2( 33.5, 220 )
+
+[sub_resource type="Shader" id=24]
+code = "shader_type canvas_item;
+
+uniform sampler2D noise;
+uniform vec4 water_tint : hint_color = vec4(1.0);
+
+void fragment(){
+	vec2 noise_uv = texture(noise, UV + TIME * 0.2).xy;
+	float wave = sin(UV.x * 40.0 + TIME * 1.0);
+	wave += (UV.y - 0.5) * 80.0 + (noise_uv.x * 2.0);
+	float alpha = smoothstep(0.2, 0.5, wave);
+	
+	float deformation = 0.05;
+	vec3 world_texture = texture(SCREEN_TEXTURE, SCREEN_UV + noise_uv * deformation - (deformation/2.0)).rgb;
+	vec3 water_color = mix(world_texture, water_tint.rgb, 0.6);
+	// foam
+	// water_color = mix(vec3(0.8, 0.8, 1.0), water_color, smoothstep(0.0,8.0, wave ));
+	water_color = water_color * mix(vec3(1.0), water_color, UV.y);
+	
+	COLOR.rgb = water_color;
+	COLOR.a = alpha;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=16]
+period = 128.0
+persistence = 0.0
+
+[sub_resource type="NoiseTexture" id=25]
+seamless = true
+noise = SubResource( 16 )
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 24 )
+shader_param/water_tint = Color( 0.129412, 0.427451, 0.894118, 1 )
+shader_param/noise = SubResource( 25 )
 
 [node name="Main" type="Node2D"]
 
-[node name="CTRL2" type="Node" parent="."]
+[node name="CTRL1" type="Node" parent="."]
+script = ExtResource( 6 )
+
+[node name="CTRL0" type="Node" parent="."]
 script = ExtResource( 6 )
 type = "keyboard"
+controller_index = 1
 
-[node name="CollisionShape2D" type="StaticBody2D" parent="."]
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CollisionShape2D"]
-polygon = PoolVector2Array( -31, 307, 121, 258, 634, 214, 931, 247, 1057, 410, 533, 507, -47, 482 )
+[node name="Deformation" type="ColorRect" parent="UI"]
+material = SubResource( 9 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Bg" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Bg"]
+scroll_base_scale = Vector2( 0.5, 0.1 )
+
+[node name="Sky" type="ColorRect" parent="Bg/ParallaxBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.890196, 0.819608, 0.764706, 1 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Bg/ParallaxBackground"]
+position = Vector2( 228, -129 )
+motion_scale = Vector2( 0.4, 0.4 )
+
+[node name="M" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer"]
+material = SubResource( 18 )
+margin_left = -496.0
+margin_top = -35.0
+margin_right = 938.0
+margin_bottom = 767.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="M2" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer"]
+material = SubResource( 18 )
+margin_left = 183.0
+margin_top = 70.0
+margin_right = 1268.0
+margin_bottom = 677.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+flip_h = true
+
+[node name="Fog" type="ColorRect" parent="Bg/ParallaxBackground"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.607843, 0.780392, 1, 0.219608 )
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="Bg/ParallaxBackground"]
+position = Vector2( 228, -129 )
+motion_scale = Vector2( 0.8, 0.8 )
+
+[node name="M" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer2"]
+material = SubResource( 19 )
+margin_left = 49.0
+margin_top = 76.0
+margin_right = 1483.0
+margin_bottom = 878.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="M2" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer2"]
+material = SubResource( 19 )
+margin_left = -966.0
+margin_top = 231.0
+margin_right = 119.0
+margin_bottom = 838.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+flip_h = true
+
+[node name="Fog2" type="ColorRect" parent="Bg/ParallaxBackground"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.607843, 0.780392, 1, 0.219608 )
+
+[node name="StaticBody" type="StaticBody2D" parent="."]
+
+[node name="Polygon" type="TextureRect" parent="StaticBody"]
+material = SubResource( 23 )
+margin_left = 51.0
+margin_top = 178.0
+margin_right = 800.0
+margin_bottom = 597.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody"]
+polygon = PoolVector2Array( 90, 303, 151, 247, 214, 221, 299, 217, 399, 302, 504, 318, 585, 305, 673, 299, 712, 332, 774, 382, 778, 441, 675, 544, 568, 580, 395, 545, 252, 512, 149, 442, 92, 366 )
+
+[node name="Grass" type="Node2D" parent="StaticBody"]
+
+[node name="GrassPatch" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 263, 233 )
+scale = Vector2( 0.103125, 0.103125 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="GrassPatch2" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 681, 321 )
+rotation = 0.361772
+scale = Vector2( 0.0744163, 0.0744163 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch2"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch2"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch2"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch2"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch2"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="GrassPatch3" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 537, 338 )
+rotation = -0.214004
+scale = Vector2( 0.0807311, 0.0807311 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch3"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch3"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch3"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch3"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch3"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="GrassPatch4" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 585, 338 )
+rotation = -0.214004
+scale = Vector2( 0.0951075, 0.0951075 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch4"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch4"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch4"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch4"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch4"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="GrassPatch5" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 609, 332 )
+rotation = 0.000882402
+scale = Vector2( 0.111389, 0.111389 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch5"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch5"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch5"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch5"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch5"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="GrassPatch6" type="Node2D" parent="StaticBody/Grass"]
+position = Vector2( 97, 317 )
+rotation = -0.75895
+scale = Vector2( 0.0712055, 0.0712055 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Grass" type="Polygon2D" parent="StaticBody/Grass/GrassPatch6"]
+material = ExtResource( 10 )
+rotation = -0.382795
+scale = Vector2( 0.769444, 0.769444 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass2" type="Polygon2D" parent="StaticBody/Grass/GrassPatch6"]
+material = ExtResource( 10 )
+rotation = -0.0513676
+scale = Vector2( 0.82744, 0.82744 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass5" type="Polygon2D" parent="StaticBody/Grass/GrassPatch6"]
+material = ExtResource( 10 )
+position = Vector2( 135.758, 0 )
+rotation = 0.109935
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass3" type="Polygon2D" parent="StaticBody/Grass/GrassPatch6"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.265487
+scale = Vector2( 0.769444, 0.769444 )
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="Grass4" type="Polygon2D" parent="StaticBody/Grass/GrassPatch6"]
+material = ExtResource( 10 )
+position = Vector2( 218.666, 0 )
+rotation = 0.648282
+scale = Vector2( 0.579246, 0.579246 )
+z_index = 1
+offset = Vector2( -813.117, -1052.41 )
+texture = ExtResource( 4 )
+polygon = PoolVector2Array( 750, 1090, 690, 500, 720, -10, 900, -10, 950, 510, 900, 1080 )
+uv = PoolVector2Array( 160, 1090, 80, 490, 140, 3.05176e-05, 350, 3.05176e-05, 400, 550, 350, 1090 )
+
+[node name="StaticBody2" type="StaticBody2D" parent="."]
+position = Vector2( 605, -290 )
+
+[node name="Polygon" type="TextureRect" parent="StaticBody2"]
+material = SubResource( 23 )
+margin_left = 51.0
+margin_top = 178.0
+margin_right = 800.0
+margin_bottom = 597.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2"]
+visible = false
+polygon = PoolVector2Array( 90, 303, 151, 247, 214, 221, 299, 217, 399, 302, 504, 318, 585, 305, 673, 299, 712, 332, 774, 382, 778, 441, 675, 544, 568, 580, 395, 545, 252, 512, 149, 442, 92, 366 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2"]
+position = Vector2( 101, 82 )
+shape = SubResource( 20 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 188, 138 )
+position = Vector2( 181, 180 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+zoom = Vector2( 0.6, 0.6 )
+process_mode = 0
+smoothing_enabled = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource( 1 )
+[node name="Player2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 425, 254 )
+controller_index = 1
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( -473, -205 )
+z_index = 10
+
+[node name="Water" type="ColorRect" parent="Node2D"]
+material = SubResource( 15 )
+margin_left = 19.0
+margin_top = 365.0
+margin_right = 1709.0
+margin_bottom = 798.0
+
+[node name="Bomb" parent="." instance=ExtResource( 8 )]
+position = Vector2( 371, 119 )

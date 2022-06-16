@@ -24,6 +24,7 @@ func on_camera_change_request(target_camera_id):
 	yield(tween, "tween_completed")
 	t_camera.current = false
 	target_camera.current = true
+	camera_manager.warn_camera_change()
 	
 func fetch_cameras():
 	var cameras = get_tree().get_nodes_in_group("camera")

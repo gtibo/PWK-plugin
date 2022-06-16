@@ -4,18 +4,24 @@ class_name KinematicActor
 export(Resource) var actor_data 
 onready var walk_tween : Tween = $walkTween
 onready var animation : AnimationPlayer = $Animation
-# export(NodePath) onready var mouth = get_node(mouth) as Spatial
+
+export(NodePath) var mouth = null
+
 export var max_speed = 2
 var direction = 1
 
 signal walked_to
 
 func _ready():
+	if mouth:
+		mouth = get_node(mouth)
 	actor_data.set_anchor(self)
 	move_and_collide(Vector3.ZERO)
 	$Sprite.material_override = $Sprite.material_override.duplicate()
 	
 func get_screen_position():
+	if mouth != null:
+		return get_viewport().get_camera().unproject_position(mouth.global_transform.origin)
 	return get_viewport().get_camera().unproject_position(global_transform.origin)
 
 func look(target):

@@ -22,8 +22,8 @@ func request_punch(player):
 func request_bomb(player, power, spawn_vel):
 	emit_signal("throw_bomb", player, power, spawn_vel)
 
-func explode(position):
-	emit_signal("explosion", position)
+func explode(position, power):
+	emit_signal("explosion", position, power)
 
 func has_player_info(ctrl_index):
 	return player_info.has(ctrl_index)

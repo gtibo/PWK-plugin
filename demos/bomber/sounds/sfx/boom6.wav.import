@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/boom6.wav-1e2121b9aca1418601aa137af1f8b108.sample"
+
+[deps]
+
+source_file="res://demos/bomber/sounds/sfx/boom6.wav"
+dest_files=[ "res://.import/boom6.wav-1e2121b9aca1418601aa137af1f8b108.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

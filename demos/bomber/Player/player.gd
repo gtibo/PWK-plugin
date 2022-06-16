@@ -3,6 +3,7 @@ var hit_container
 export(NodePath) onready var punch_timer = get_node(punch_timer)
 export(NodePath) onready var bomb_timer = get_node(bomb_timer)
 export(Resource) var RuleManager
+export(Resource) var main_sfx_manager
 export(PackedScene) var punch_scene
 export(PackedScene) var bomb_scene
 
@@ -28,25 +29,31 @@ func set_controller_index(ctrl_index):
 	.set_controller_index(ctrl_index)
 	punch_button = str(controller_index) + "_b_button"
 	bomb_button = str(controller_index) + "_x_button"
-	run_button = str(controller_index) + "_r2_button"
+	run_button = str(controller_index) + "_l_button"
 	
-	$TextureRect.material = $TextureRect.material.duplicate()
-	$TextureRect.material.set_shader_param("Contour", RuleManager.themes[ctrl_index].contour)
-	$TextureRect.material.set_shader_param("Main", RuleManager.themes[ctrl_index].fill)
+	$Sprite.material = $Sprite.material.duplicate()
+	$Sprite.material.set_shader_param("stroke_color", RuleManager.themes[ctrl_index].stroke)
+	$Sprite.material.set_shader_param("main_color", RuleManager.themes[ctrl_index].main)
+	$Sprite.material.set_shader_param("second_color", RuleManager.themes[ctrl_index].second)
 	
 func _ready():
 	RuleManager.connect("victory", self, "on_victory")
 
-func get_speed_boost():
-	return 1
-	return 1 + int(Input.is_action_pressed(run_button)) * .2
-	
-func apply_x_inputs(delta):
-	if x_input == 0: return
+func get_speed_boost(percent):
+	return 1 + int(Input.is_action_pressed(run_button)) * percent
+
+func check_direction():
 	if x_input != direction:
 		direction = x_input
 		emit_signal("changeDirection", direction)
-	velocity.x = lerp(velocity.x, x_input * (SPEED * get_speed_boost()), acceleration * delta)
+		
+func apply_x_inputs(delta):
+	if x_input == 0: return
+	check_direction()
+	var air_slowdown = 1.0
+	if !is_on_floor():
+		air_slowdown = 0.5
+	velocity.x = lerp(velocity.x, x_input * (SPEED * get_speed_boost(1.0)), acceleration * air_slowdown * delta)
 	
 func check_punch():
 	if Input.is_action_just_pressed(punch_button) && can_punch:
@@ -55,6 +62,7 @@ func check_punch():
 		RuleManager.request_punch(self)
 		punch_timer.start()
 		emit_signal("punch")
+		
 func check_throw():
 	if Input.is_action_pressed(bomb_button) && can_throw_bomb:
 		$StateMachine.transition_to("Throw")
@@ -68,13 +76,15 @@ func throw_bomb(power):
 	
 func _on_HitBox_area_entered(area):
 	if area is HitZone and not area.is_emitter(self):
+		main_sfx_manager.play("hit")
+		snap_vector = Vector2.ZERO
 		var angle = 0
 		if self.position.x > area.position.x: angle = 1
 		else:  angle = -1
 		var force = Vector2(angle * 10, -10) * 100
 		velocity += force
 		$StateMachine.transition_to("Stunned")
-		Input.start_joy_vibration(controller_index,0,1,.4)
+		# Input.start_joy_vibration(controller_index,0,1,.4)
 		return
 	if area.is_in_group("KO"):
 		$StateMachine.transition_to("KO")
@@ -92,4 +102,3 @@ func _on_Punch_timer_timeout():
 func _on_Bomb_timer_timeout():
 	can_throw_bomb = true
 	RuleManager.player_action_update(self,"can_throw_bomb", true)
-

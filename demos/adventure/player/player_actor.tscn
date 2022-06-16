@@ -96,6 +96,7 @@ tracks/0/keys = {
 [node name="Player" groups=["player"] instance=ExtResource( 1 )]
 script = ExtResource( 21 )
 actor_data = ExtResource( 19 )
+mouth = NodePath("Mouth")
 story_manager = ExtResource( 23 )
 
 [node name="Idle" parent="StateMachine" index="0"]
@@ -113,12 +114,19 @@ transform = Transform( 1, 0, 0, 0, 0.990268, 0.139173, 0, -0.139173, 0.990268, 0
 shape = SubResource( 12 )
 
 [node name="PlayerCamera" type="Camera" parent="." index="5" groups=["camera"]]
-transform = Transform( 1, 0, 0, 0, 0.886058, 0.463574, 0, -0.463574, 0.886058, 0, 3.29688, 5.84973 )
+transform = Transform( 1, 0, 0, 0, 0.882947, 0.469471, 0, -0.469471, 0.882947, 0, 3.3, 5.8 )
 current = true
 fov = 25.0
 
-[node name="Animation" parent="." index="6"]
+[node name="PlayerCamera2" type="Camera" parent="." index="6" groups=["camera"]]
+transform = Transform( 1, 0, 0, 0, 0.882948, 0.469472, 0, -0.469472, 0.882948, 0, 3.3, 5.8 )
+fov = 35.0
+
+[node name="Animation" parent="." index="7"]
 anims/RESET = SubResource( 13 )
 anims/idle = SubResource( 10 )
 anims/punch = SubResource( 14 )
 anims/walk = SubResource( 11 )
+
+[node name="Mouth" type="Position3D" parent="." index="8"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0 )

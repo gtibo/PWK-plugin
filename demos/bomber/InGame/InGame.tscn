@@ -1,57 +1,349 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=45 format=2]
 
-[ext_resource path="res://demos/bomber/cameraFollow.gd" type="Script" id=1]
+[ext_resource path="res://demos/bomber/InGame/cameraFollow.gd" type="Script" id=1]
 [ext_resource path="res://demos/bomber/InGame/HUDManager.gd" type="Script" id=2]
 [ext_resource path="res://demos/bomber/Player/player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://demos/bomber/Terrain/translate.gd" type="Script" id=4]
 [ext_resource path="res://demos/bomber/InGame/InGame.gd" type="Script" id=5]
-[ext_resource path="res://demos/bomber/Manager/RuleManager.tres" type="Resource" id=6]
+[ext_resource path="res://demos/bomber/Manager/ruler_manager.tres" type="Resource" id=6]
 [ext_resource path="res://demos/bomber/Bomb/Explosion.tscn" type="PackedScene" id=7]
-[ext_resource path="res://demos/bomber/InGame/HitsManager.gd" type="Script" id=8]
+[ext_resource path="res://demos/bomber/InGame/hits_manager.gd" type="Script" id=8]
 [ext_resource path="res://demos/bomber/Bomb/Bomb.tscn" type="PackedScene" id=9]
 [ext_resource path="res://demos/bomber/Player/Punch.tscn" type="PackedScene" id=10]
 [ext_resource path="res://demos/bomber/HUD/PlayerHUD.tscn" type="PackedScene" id=11]
-[ext_resource path="res://demos/bomber/island_2.png" type="Texture" id=12]
-[ext_resource path="res://demos/bomber/island_3.png" type="Texture" id=13]
-[ext_resource path="res://demos/bomber/island_1.png" type="Texture" id=14]
-[ext_resource path="res://demos/bomber/water_texture.png" type="Texture" id=15]
+[ext_resource path="res://demos/bomber/InGame/WinScreen.gd" type="Script" id=12]
+[ext_resource path="res://demos/bomber/textures/dirty_glass.jpg" type="Texture" id=13]
+[ext_resource path="res://demos/bomber/Terrain/flat_watercolor_mat.tres" type="Material" id=14]
+[ext_resource path="res://demos/bomber/Terrain/assets/mountain_1.png" type="Texture" id=15]
 [ext_resource path="res://demos/bomber/Bomb/ExplosionVFX.tscn" type="PackedScene" id=16]
+[ext_resource path="res://demos/bomber/Terrain/terrain.tscn" type="PackedScene" id=17]
+[ext_resource path="res://addons/PWK/RedHatDisplay-SemiBold.ttf" type="DynamicFontData" id=18]
+[ext_resource path="res://demos/bomber/InGame/banana_particle.png" type="Texture" id=19]
+[ext_resource path="res://demos/bomber/sounds/sfx_manager.tres" type="Resource" id=20]
+[ext_resource path="res://demos/bomber/InGame/positional_sfx_manager.gd" type="Script" id=21]
+[ext_resource path="res://demos/bomber/sounds/data/explosion_sfx.tres" type="Resource" id=22]
+[ext_resource path="res://demos/bomber/sounds/positional_sfx_manager.tres" type="Resource" id=23]
 
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 159, 51.5 )
+[sub_resource type="Environment" id=7]
+tonemap_mode = 2
 
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 60.5, 132 )
+[sub_resource type="Shader" id=8]
+code = "shader_type canvas_item;
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 238, 79 )
+uniform vec2 r_displacement = vec2(3.0, 0.0);
+uniform vec2 g_displacement = vec2(0.0, 0.0);
+uniform vec2 b_displacement = vec2(-3.0, 0.0);
+uniform float blur_amount = 0.5;
 
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 234.5, 40.5 )
+
+uniform sampler2D glass_texture;
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float fblendScreen(float base, float blend) {
+	return 1.0-((1.0-base)*(1.0-blend));
+}
+
+vec3 vblendScreen(vec3 base, vec3 blend) {
+	return vec3(fblendScreen(base.r,blend.r),fblendScreen(base.g,blend.g),fblendScreen(base.b,blend.b));
+}
+
+void fragment()
+{
+
+	float dist = distance(UV, vec2(.5, .5));
+	float blur = dist * blur_amount;
+	
+	
+	float r = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*r_displacement * dist), blur).r;
+	float g = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*g_displacement * dist), blur).g;
+	float b = textureLod(SCREEN_TEXTURE, SCREEN_UV + vec2(SCREEN_PIXEL_SIZE*b_displacement * dist), blur).b;
+	vec3 glass = texture(glass_texture, UV).rgb;
+	
+	
+	vec3 c = vec3(r, g, b);
+	float l = smoothstep(luma(c), 0.0, 0.2);
+	vec3 final = vblendScreen(c, glass);
+	COLOR.rgb = c;
+}"
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = SubResource( 8 )
+shader_param/r_displacement = Vector2( 3, 0 )
+shader_param/g_displacement = Vector2( 0, 0 )
+shader_param/b_displacement = Vector2( -3, 0 )
+shader_param/blur_amount = 1.0
+shader_param/glass_texture = ExtResource( 13 )
+
+[sub_resource type="Curve" id=26]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.0405405, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=27]
+curve = SubResource( 26 )
+
+[sub_resource type="ParticlesMaterial" id=25]
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 600, 0 )
+initial_velocity = 800.0
+initial_velocity_random = 0.5
+angular_velocity = 500.0
+angular_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.1
+scale_random = 0.2
+scale_curve = SubResource( 27 )
+
+[sub_resource type="Shader" id=22]
+code = "shader_type canvas_item;
+
+const float PI = 3.14;
+
+vec3 hsv2rgb(vec3 c) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+
+void fragment(){
+	vec4 font_texture = texture(TEXTURE, UV);
+	
+	COLOR.rgb = hsv2rgb(vec3(UV.x * 2.0 + TIME, 0.7, 0.8));
+
+	COLOR.a = font_texture.a;
+}"
+
+[sub_resource type="ShaderMaterial" id=23]
+shader = SubResource( 22 )
+
+[sub_resource type="DynamicFont" id=28]
+size = 96
+font_data = ExtResource( 18 )
+
+[sub_resource type="Animation" id=31]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Label:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Label:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Label:rect_rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=29]
+resource_name = "appear"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("Label:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1.5, 1.5 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Label:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=30]
+resource_name = "shake"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Label:rect_rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 2, 2, 2 ),
+"update": 0,
+"values": [ 5.0, -5.0, 5.0 ]
+}
+
+[sub_resource type="AnimationNodeAdd2" id=32]
+
+[sub_resource type="AnimationNodeAnimation" id=33]
+animation = "shake"
+
+[sub_resource type="AnimationNodeAnimation" id=34]
+animation = "appear"
+
+[sub_resource type="AnimationNodeBlendTree" id=35]
+graph_offset = Vector2( -401, -71.5 )
+nodes/Add2/node = SubResource( 32 )
+nodes/Add2/position = Vector2( 80, 140 )
+nodes/Animation/node = SubResource( 34 )
+nodes/Animation/position = Vector2( -260, 100 )
+"nodes/Animation 2/node" = SubResource( 33 )
+"nodes/Animation 2/position" = Vector2( -180, 260 )
+nodes/output/position = Vector2( 340, 120 )
+node_connections = [ "output", 0, "Add2", "Add2", 0, "Animation", "Add2", 1, "Animation 2" ]
 
 [sub_resource type="LineShape2D" id=1]
+
+[sub_resource type="Shader" id=14]
+code = "shader_type canvas_item;
+uniform float time_offset = 0.0;
+uniform sampler2D noise;
+uniform vec4 water_tint : hint_color = vec4(1.0);
+
+void fragment(){
+	
+	float time = TIME + time_offset;
+	
+	float wave_height = 0.01;
+	float wave_height_half = wave_height / 2.0;
+	vec2 noise_uv = texture(noise, UV + time * 0.2).xy;
+	float wave = sin(UV.x * 100.0 + time * 2.0);
+	wave += (UV.y - wave_height_half) / wave_height - (noise_uv.x * 4.0);
+	float alpha = smoothstep(0.49, 0.51, wave);
+	
+	float deformation = 0.05;
+	vec3 world_texture = texture(SCREEN_TEXTURE, SCREEN_UV + noise_uv * deformation - (deformation/2.0)).rgb;
+	vec3 water_color = mix(world_texture, water_tint.rgb, 0.6);
+	// foam
+	// water_color = mix(vec3(0.8, 0.8, 1.0), water_color, smoothstep(0.0,8.0, wave ));
+	water_color = water_color * mix(vec3(1.0), water_color, UV.y);
+	
+	COLOR.rgb = water_color;
+	COLOR.a = alpha;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=18]
+period = 120.0
+persistence = 0.0
+
+[sub_resource type="NoiseTexture" id=17]
+seamless = true
+noise = SubResource( 18 )
+
+[sub_resource type="ShaderMaterial" id=19]
+shader = SubResource( 14 )
+shader_param/time_offset = 0.0
+shader_param/water_tint = Color( 0.129412, 0.427451, 0.894118, 1 )
+shader_param/noise = SubResource( 17 )
 
 [node name="InGame" type="Node2D"]
 script = ExtResource( 5 )
 RuleManager = ExtResource( 6 )
 player_scene = ExtResource( 3 )
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 7 )
 
-[node name="ColorRect" type="ColorRect" parent="ParallaxBackground"]
+[node name="Bg" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Bg"]
+scroll_base_offset = Vector2( 0, 600 )
+
+[node name="Sky" type="ColorRect" parent="Bg/ParallaxBackground"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+color = Color( 0.960784, 0.901961, 0.831373, 1 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Bg/ParallaxBackground"]
+position = Vector2( 228, -129 )
+motion_scale = Vector2( 0.4, 0.1 )
+
+[node name="M" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer"]
+material = ExtResource( 14 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -3000.0
+margin_top = -400.0
+margin_right = 3000.0
+margin_bottom = 680.0
+texture = ExtResource( 15 )
+stretch_mode = 2
+
+[node name="Fog" type="ColorRect" parent="Bg/ParallaxBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.960784, 0.901961, 0.831373, 0.611765 )
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="Bg/ParallaxBackground"]
+motion_scale = Vector2( 0.8, 0.2 )
+
+[node name="M" type="TextureRect" parent="Bg/ParallaxBackground/ParallaxLayer2"]
+material = ExtResource( 14 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -3000.0
+margin_top = -400.0
+margin_right = 3000.0
+margin_bottom = 680.0
+texture = ExtResource( 15 )
+stretch_mode = 2
+
+[node name="Fog2" type="ColorRect" parent="Bg/ParallaxBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.960784, 0.901961, 0.831373, 0.317647 )
 
 [node name="Overlay" type="CanvasLayer" parent="."]
 
-[node name="Control" type="Control" parent="Overlay"]
+[node name="Deformation" type="ColorRect" parent="Overlay"]
+material = SubResource( 20 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HUDManager" type="Control" parent="Overlay"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
 PlayerHUD = ExtResource( 11 )
 RuleManager = ExtResource( 6 )
 
-[node name="PlayerList" type="HBoxContainer" parent="Overlay/Control"]
+[node name="PlayerList" type="HBoxContainer" parent="Overlay/HUDManager"]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -20.0
@@ -61,243 +353,116 @@ margin_bottom = 83.0
 grow_horizontal = 2
 alignment = 1
 
-[node name="Spawns" type="Node2D" parent="."]
+[node name="WinScreen" type="Control" parent="Overlay"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 12 )
+RuleManager = ExtResource( 6 )
+main_sfx_manager = ExtResource( 20 )
 
-[node name="1" type="Position2D" parent="Spawns"]
-position = Vector2( 1332, -882 )
+[node name="Particles" type="Particles2D" parent="Overlay/WinScreen"]
+position = Vector2( 492, 551 )
+emitting = false
+amount = 100
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource( 25 )
+texture = ExtResource( 19 )
 
-[node name="2" type="Position2D" parent="Spawns"]
-position = Vector2( -1004, -875 )
+[node name="Label" type="Label" parent="Overlay/WinScreen"]
+material = SubResource( 23 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -395.0
+margin_top = -75.0
+margin_right = 395.0
+margin_bottom = 75.0
+rect_pivot_offset = Vector2( 395, 75 )
+custom_constants/shadow_as_outline = 0
+custom_fonts/font = SubResource( 28 )
+text = "Machin wins..."
+align = 1
+valign = 1
 
-[node name="3" type="Position2D" parent="Spawns"]
-position = Vector2( 933, -251 )
+[node name="Timer" type="Timer" parent="Overlay/WinScreen"]
+wait_time = 2.0
+one_shot = true
 
-[node name="4" type="Position2D" parent="Spawns"]
-position = Vector2( -12, -64 )
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Overlay/WinScreen"]
+anims/RESET = SubResource( 31 )
+anims/appear = SubResource( 29 )
+anims/shake = SubResource( 30 )
 
-[node name="Terrain" type="Node2D" parent="."]
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="AnimationTree" type="AnimationTree" parent="Overlay/WinScreen"]
+tree_root = SubResource( 35 )
+anim_player = NodePath("../AnimationPlayer")
+parameters/Add2/add_amount = 1.0
 
-[node name="Ground" type="Node2D" parent="Terrain"]
+[node name="Terrain" parent="." instance=ExtResource( 17 )]
 
-[node name="StaticBody2D12" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -941, -181 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D12"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 13 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D12"]
-position = Vector2( 2, 92.5 )
-shape = SubResource( 5 )
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D12"]
-position = Vector2( 100.5, 12 )
-shape = SubResource( 6 )
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -1013, -682 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 14 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D"]
-position = Vector2( 10, 19 )
-shape = SubResource( 3 )
-
-[node name="StaticBody2D10" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 322, -1233 )
+[node name="Water" type="Node2D" parent="."]
+position = Vector2( 0, -76 )
+z_index = 10
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D10"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 14 )
+[node name="Start" type="Position2D" parent="Water"]
+position = Vector2( 0, 90 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D10"]
-position = Vector2( 10, 19 )
-shape = SubResource( 3 )
+[node name="End" type="Position2D" parent="Water"]
+position = Vector2( 0, -2290 )
 
-[node name="StaticBody2D11" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -882, -21 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island1" type="Sprite" parent="Terrain/Ground/StaticBody2D11"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 14 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D11"]
-position = Vector2( 10, 19 )
-shape = SubResource( 3 )
-
-[node name="StaticBody2D2" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -154, 98 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D2"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D2"]
-position = Vector2( 6.5, 23.5 )
-shape = SubResource( 4 )
-
-[node name="StaticBody2D5" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 1370, -797 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D5"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D5"]
-position = Vector2( 6.5, 23.5 )
-shape = SubResource( 4 )
-
-[node name="StaticBody2D9" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -286, -961 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D9"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D9"]
-position = Vector2( 6.5, 23.5 )
-shape = SubResource( 4 )
-
-[node name="StaticBody2D6" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 752, -233 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D6"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D6"]
-position = Vector2( 6.5, 23.5 )
-shape = SubResource( 4 )
-
-[node name="StaticBody2D7" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 30, -263 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island2" type="Sprite" parent="Terrain/Ground/StaticBody2D7"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D7"]
-position = Vector2( 6.5, 23.5 )
-shape = SubResource( 4 )
-
-[node name="StaticBody2D3" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 356, 15 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D3"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 13 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D3"]
-position = Vector2( 2, 92.5 )
-shape = SubResource( 5 )
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D3"]
-position = Vector2( 100.5, 12 )
-shape = SubResource( 6 )
-
-[node name="StaticBody2D4" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( -403, -440 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D4"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 13 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D4"]
-position = Vector2( 2, 92.5 )
-shape = SubResource( 5 )
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D4"]
-position = Vector2( 100.5, 12 )
-shape = SubResource( 6 )
-
-[node name="StaticBody2D8" type="StaticBody2D" parent="Terrain/Ground"]
-position = Vector2( 844, -785 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Island3" type="Sprite" parent="Terrain/Ground/StaticBody2D8"]
-scale = Vector2( 0.6, 0.6 )
-texture = ExtResource( 13 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D8"]
-position = Vector2( 2, 92.5 )
-shape = SubResource( 5 )
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Terrain/Ground/StaticBody2D8"]
-position = Vector2( 100.5, 12 )
-shape = SubResource( 6 )
-
-[node name="KOZone" type="Area2D" parent="Terrain" groups=["KO"]]
-position = Vector2( -33, 892 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/KOZone"]
-shape = SubResource( 1 )
-
-[node name="ColorRect" type="TextureRect" parent="Terrain/KOZone"]
-margin_left = -3866.0
-margin_right = 3906.0
-margin_bottom = 1598.0
-texture = ExtResource( 15 )
-stretch_mode = 2
-
-[node name="Start" type="Position2D" parent="Terrain"]
-position = Vector2( 0, 303 )
-
-[node name="End" type="Position2D" parent="Terrain"]
-position = Vector2( 0, -1596 )
-
-[node name="Tween" type="Tween" parent="Terrain"]
+[node name="Tween" type="Tween" parent="Water"]
 script = ExtResource( 4 )
 start_position = NodePath("../Start")
 end_position = NodePath("../End")
 target = NodePath("../KOZone")
 RuleManager = ExtResource( 6 )
 
+[node name="KOZone" type="Area2D" parent="Water" groups=["KO"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Water/KOZone"]
+position = Vector2( 0, 80 )
+shape = SubResource( 1 )
+
+[node name="Water" type="ColorRect" parent="Water/KOZone"]
+material = SubResource( 19 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -2048.0
+margin_top = -19.0
+margin_right = 2048.0
+margin_bottom = 1481.0
+
+[node name="Spawns" type="Node2D" parent="."]
+
+[node name="1" type="Position2D" parent="Spawns"]
+position = Vector2( -611, -304 )
+
+[node name="2" type="Position2D" parent="Spawns"]
+position = Vector2( -253, -398 )
+
+[node name="3" type="Position2D" parent="Spawns"]
+position = Vector2( 780, -345 )
+
+[node name="4" type="Position2D" parent="Spawns"]
+position = Vector2( 224, -318 )
+
+[node name="PositionalSFXManager" type="Node2D" parent="."]
+script = ExtResource( 21 )
+main_sfx_manager = ExtResource( 23 )
+known_sfx = [ ExtResource( 22 ) ]
+
 [node name="HitsManager" type="Node2D" parent="."]
 script = ExtResource( 8 )
 RuleManager = ExtResource( 6 )
+main_sfx_manager = ExtResource( 20 )
 explosion_scene = ExtResource( 7 )
 explosion_vfx_scene = ExtResource( 16 )
 bomb_scene = ExtResource( 9 )
@@ -306,6 +471,11 @@ punch_scene = ExtResource( 10 )
 [node name="Players" type="Node2D" parent="."]
 
 [node name="cameraFollow" type="Camera2D" parent="."]
-current = true
+limit_bottom = 0
+limit_smoothed = true
 script = ExtResource( 1 )
+min_zoom = 0.8
+max_zoom = 4.0
 RuleManager = ExtResource( 6 )
+
+[connection signal="announcer_end" from="Overlay/WinScreen" to="." method="_on_WinScreen_announcer_end"]

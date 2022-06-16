@@ -77,7 +77,6 @@ func _physics_process(delta):
 	$TerrainRoot/desiredTarget.translation = desired_position
 	
 func _ready():
-	camera_manager.change_camera("VolleyCamera")
 	randomize()
 	var landmark = landmark_manager.get_landmark("VolleyBallTerrain")
 	$TerrainRoot.translation = landmark.get_position()
@@ -100,6 +99,9 @@ func _ready():
 	
 	opponent_counter.set_point(0)
 	player_counter.set_point(0)
+
+	camera_manager.change_camera("VolleyCamera")
+	yield(camera_manager, "camera_changed")
 	
 	serve_ball()
 	

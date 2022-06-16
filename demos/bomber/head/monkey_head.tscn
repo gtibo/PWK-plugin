@@ -1,0 +1,225 @@
+[gd_scene load_steps=51 format=2]
+
+[ext_resource path="res://demos/bomber/textures/water_color_bg.png" type="Texture" id=1]
+[ext_resource path="res://demos/bomber/textures/Paper_Wrinkled_001_ambientOcclusion.jpg" type="Texture" id=2]
+[ext_resource path="res://demos/bomber/head/sprites/smile/head-smile-stroke.png" type="Texture" id=3]
+[ext_resource path="res://demos/bomber/head/sprites/smile/head-smile-fill.png" type="Texture" id=4]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0008.png" type="Texture" id=5]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0006.png" type="Texture" id=6]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0002.png" type="Texture" id=7]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0010.png" type="Texture" id=8]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0012.png" type="Texture" id=9]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0004.png" type="Texture" id=10]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0014.png" type="Texture" id=11]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0016.png" type="Texture" id=12]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0018.png" type="Texture" id=13]
+[ext_resource path="res://demos/bomber/head/sprites/idle/fill/head-smile-fill-0000.png" type="Texture" id=14]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0016.png" type="Texture" id=15]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0004.png" type="Texture" id=16]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0012.png" type="Texture" id=17]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0010.png" type="Texture" id=18]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0002.png" type="Texture" id=19]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0006.png" type="Texture" id=20]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0018.png" type="Texture" id=21]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0014.png" type="Texture" id=22]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0008.png" type="Texture" id=23]
+[ext_resource path="res://demos/bomber/head/sprites/idle/stroke/head-smile-stroke-0000.png" type="Texture" id=24]
+[ext_resource path="res://demos/bomber/head/monkey_head.gd" type="Script" id=25]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0000.png" type="Texture" id=26]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0024.png" type="Texture" id=27]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0008.png" type="Texture" id=28]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0004.png" type="Texture" id=29]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0016.png" type="Texture" id=30]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0032.png" type="Texture" id=31]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0020.png" type="Texture" id=32]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0020.png" type="Texture" id=33]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0036.png" type="Texture" id=34]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0032.png" type="Texture" id=35]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0000.png" type="Texture" id=36]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0004.png" type="Texture" id=37]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0016.png" type="Texture" id=38]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0012.png" type="Texture" id=39]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0036.png" type="Texture" id=40]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0008.png" type="Texture" id=41]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0012.png" type="Texture" id=42]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0028.png" type="Texture" id=43]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/fill/head-sleep-fill-0028.png" type="Texture" id=44]
+[ext_resource path="res://demos/bomber/head/sprites/sleep/stroke/head-sleep-stroke-0024.png" type="Texture" id=45]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform vec4 stroke_color : hint_color = vec4(1.0);
+uniform vec4 main_color : hint_color = vec4(1.0);
+uniform vec4 second_color : hint_color = vec4(1.0);
+
+uniform sampler2D fill_sampler;
+uniform sampler2D stroke_sampler;
+
+uniform sampler2D water_color_sampler;
+uniform sampler2D paper_wrinkle_sampler;
+uniform bool flip = false;
+
+void fragment(){
+	
+	vec2 uv_flip = vec2(flip ? 1.0 - UV.x : UV.x, UV.y);
+	
+	vec4 fill_texture = texture(fill_sampler, uv_flip);
+	vec4 stroke_texture = texture(stroke_sampler, uv_flip);
+	
+	float tick = mod(round(TIME * 4.0)/10.0, 10.0);
+	
+	vec2 uv_move = vec2(
+		UV.x + tick * 1.642,
+		UV.y - tick * 1.842
+	);
+	
+	vec4 paper_wrinkle_texture = texture(paper_wrinkle_sampler, uv_move);
+	vec4 water_color_texture = texture(water_color_sampler, uv_move);
+
+	float a = clamp(fill_texture.a + stroke_texture.a, 0, 1.0);
+	
+	vec3 fill_color = mix(main_color, second_color, fill_texture.x).rgb;
+	vec3 final_color = mix(fill_color, stroke_color.rgb, stroke_texture.a * 0.7).rgb;
+	
+	COLOR.rgb = final_color * mix(final_color, vec3(1.0), smoothstep(0.22, 0.4, water_color_texture.x)) * paper_wrinkle_texture.x;
+	COLOR.a = a;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/stroke_color = Color( 0.0901961, 0.0784314, 0.0470588, 1 )
+shader_param/main_color = Color( 0.855469, 0.420536, 0.227234, 1 )
+shader_param/second_color = Color( 0.501961, 0.666667, 0.764706, 1 )
+shader_param/flip = false
+shader_param/fill_sampler = ExtResource( 14 )
+shader_param/stroke_sampler = ExtResource( 24 )
+shader_param/water_color_sampler = ExtResource( 1 )
+shader_param/paper_wrinkle_sampler = ExtResource( 2 )
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("HeadSprite:material:shader_param/fill_sampler")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 4 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HeadSprite:material:shader_param/stroke_sampler")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 3 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:material:shader_param/fill_sampler")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 14 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:material:shader_param/stroke_sampler")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 24 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "sleep"
+length = 2.0
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/fill_sampler")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 26 ), ExtResource( 29 ), ExtResource( 28 ), ExtResource( 39 ), ExtResource( 30 ), ExtResource( 32 ), ExtResource( 27 ), ExtResource( 44 ), ExtResource( 31 ), ExtResource( 40 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:material:shader_param/stroke_sampler")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 36 ), ExtResource( 37 ), ExtResource( 41 ), ExtResource( 42 ), ExtResource( 38 ), ExtResource( 33 ), ExtResource( 45 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 34 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "smile"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/fill_sampler")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 14 ), ExtResource( 7 ), ExtResource( 10 ), ExtResource( 6 ), ExtResource( 5 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:material:shader_param/stroke_sampler")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 24 ), ExtResource( 19 ), ExtResource( 16 ), ExtResource( 20 ), ExtResource( 23 ), ExtResource( 18 ), ExtResource( 17 ), ExtResource( 22 ), ExtResource( 15 ), ExtResource( 21 ) ]
+}
+
+[node name="HeadSprite" type="ColorRect"]
+material = SubResource( 2 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 73, -404 )
+script = ExtResource( 25 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 4 )
+anims/sleep = SubResource( 5 )
+anims/smile = SubResource( 3 )

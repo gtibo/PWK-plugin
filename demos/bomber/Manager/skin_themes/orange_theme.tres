@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://demos/bomber/Manager/CharaThemebuilder.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+stroke = Color( 0.12549, 0.0705882, 0.133333, 1 )
+main = Color( 0.945098, 0.545098, 0.286275, 1 )
+second = Color( 0.392157, 0.509804, 0.694118, 1 )
+name = "Snubby"

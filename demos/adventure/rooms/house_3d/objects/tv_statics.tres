@@ -1,0 +1,27 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://demos/adventure/rooms/house_3d/objects/tv_screen.jpg" type="Texture" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+
+uniform sampler2D screen_color; 
+
+void fragment(){
+	
+	float big_wave = abs(cos((TIME * 0.5 + UV.x) * 4.0));
+	float small_wave = ((sin((UV.x) * 100.0) + 1.0) / 2.0);
+	
+	float wave = small_wave * big_wave;
+	
+	SPECULAR = 1.0;
+	vec2 pixel_uv = floor((vec2(UV.y, -UV.x) + big_wave * 0.01) * 60.0)/60.0;
+	
+	ALBEDO = textureLod(screen_color, pixel_uv, 1.0).rgb * mix(1.0, wave, 0.8);
+	ROUGHNESS = 0.1;
+	//EMISSION = vec3(0.2);
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/screen_color = ExtResource( 1 )

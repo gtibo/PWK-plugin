@@ -52,7 +52,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "JoyMap",
 "language": "GDScript",
-"path": "res://addons/PWK/nodes/util/JoyMap.gd"
+"path": "res://addons/PWK/nodes/util/joy_map.gd"
 }, {
 "base": "KinematicBody",
 "class": "KinematicActor",
@@ -145,6 +145,16 @@ _global_script_classes=[ {
 "path": "res://demos/adventure/focus_manager/focus_manager_builder.gd"
 }, {
 "base": "Resource",
+"class": "game_data",
+"language": "GDScript",
+"path": "res://demos/home/game_data/game_data_builder.gd"
+}, {
+"base": "Resource",
+"class": "icon_data",
+"language": "GDScript",
+"path": "res://demos/home/action_icon/icon_data_builder.gd"
+}, {
+"base": "Resource",
 "class": "mini_game_data",
 "language": "GDScript",
 "path": "res://demos/adventure/mini_game/mini_game_data_builder.gd"
@@ -153,6 +163,21 @@ _global_script_classes=[ {
 "class": "minigameManager",
 "language": "GDScript",
 "path": "res://demos/adventure/mini_game/mini_game_manager_builder.gd"
+}, {
+"base": "Resource",
+"class": "positional_sfx_manager",
+"language": "GDScript",
+"path": "res://demos/bomber/sounds/positional_sfx_manager_builder.gd"
+}, {
+"base": "Resource",
+"class": "sfx_data",
+"language": "GDScript",
+"path": "res://demos/home/sfx/sfx_data_builder.gd"
+}, {
+"base": "Resource",
+"class": "sfx_manager",
+"language": "GDScript",
+"path": "res://demos/home/sfx/sfx_manager_builder.gd"
 } ]
 _global_script_class_icons={
 "ActorData": "",
@@ -182,18 +207,29 @@ _global_script_class_icons={
 "bomber_theme": "",
 "cameraFollow": "",
 "focus_manager": "",
+"game_data": "",
+"icon_data": "",
 "mini_game_data": "",
-"minigameManager": ""
+"minigameManager": "",
+"positional_sfx_manager": "",
+"sfx_data": "",
+"sfx_manager": ""
 }
 
 [application]
 
 config/name="Possible World Kit"
-run/main_scene="res://demos/adventure/main_adventure.tscn"
+run/main_scene="res://demos/home/main_home.tscn"
 boot_splash/image="res://splash.png"
 boot_splash/fullsize=false
-boot_splash/bg_color=Color( 0.0509804, 0.0509804, 0.054902, 1 )
+boot_splash/use_filter=false
+boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
 
 [editor_plugins]
 
