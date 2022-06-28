@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" load_steps=8 format=2]
+
+[ext_resource path="res://addons/vpainter/additional_resources/height_blend_4_textures.shader" type="Shader" id=1]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/grass/grass_albedo.png" type="Texture" id=2]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/dirt_stone_path/dirt_stone_mat__albedo.png" type="Texture" id=3]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/dirt_stone_path/dirt_stone_mat__normal.png" type="Texture" id=4]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/grass/grass_normal.png" type="Texture" id=5]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/dirt_stone_path/dirt_pebble_mask.png" type="Texture" id=6]
+[ext_resource path="res://demos/adventure/rooms/outsite/ground/grass/grass_mask.png" type="Texture" id=7]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/uv_scale = 80.0
+shader_param/blend_softness1 = 0.025
+shader_param/blend_softness2 = 0.025
+shader_param/blend_softness3 = 0.025
+shader_param/m1 = ExtResource( 7 )
+shader_param/c1 = ExtResource( 2 )
+shader_param/n1 = ExtResource( 5 )
+shader_param/m2 = ExtResource( 6 )
+shader_param/c2 = ExtResource( 3 )
+shader_param/n2 = ExtResource( 4 )

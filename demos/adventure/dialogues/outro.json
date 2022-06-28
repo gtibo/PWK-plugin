@@ -2,8 +2,9 @@
   "0": {
     "actor": "dog",
     "lines": [
-      "Sorry good fellow, you can't go further than that...
-      this place doesn 't exist yet"    ],
+      "Are you crazy!?",
+      "You can't go further than that,
+      this place doesn't exist yet"],
       "next": "1"
     },
     "1": {
@@ -25,9 +26,9 @@
     "3": {
       "actor": "m.hat",
       "lines": [
-        "do you know when this place will exist
-        I have to find socks
-        for an annoying goblin "
+        "That's really profound and all but...",
+        "Do you know when this place will exist?
+        I have to find socks for an annoying goblin... "
       ],
       "next": "4"
     },

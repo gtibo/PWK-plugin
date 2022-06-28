@@ -18,7 +18,7 @@ func _ready():
 	story_manager.connect("location_change", self, "on_location_change")
 	story_manager.connect("custom_signal", self, "on_custom_signal")
 	
-func on_custom_signal(signal_name, value):
+func on_custom_signal(signal_name):
 	if signal_name == "restart":
 		story_manager.setup()
 		var spawn_name = story_manager.story_data.spawn
@@ -36,7 +36,7 @@ func load_scene(scene_name, spawn_name):
 		yield($UI/Tween, "tween_completed")
 		for child in $SceneHolder.get_children():
 			child.queue_free()
-				
+		yield(get_tree(), "idle_frame")
 	var scene = known_locations[scene_name].scene.instance()
 	$SoundTrack.stream = known_locations[scene_name].theme
 	$SoundTrack.play()

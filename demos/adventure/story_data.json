@@ -115,6 +115,34 @@
       }
     },
     "outside": {
+      "events": {
+        "outro": {
+          "once": true,
+          "stack": {
+            "0": {
+              "type": "dialogue",
+              "name": "pre_outro",
+              "next": "0.1"
+            },
+            "0.1": {
+              "type": "goto",
+              "routes": [
+                ["m.hat", "front_dog"]
+              ],
+              "next": "0.2",
+            },
+            "0.2": {
+              "type": "dialogue",
+              "name": "outro",
+              "next": "0.3"
+            },
+            "0.3": {
+              "type": "emit",
+              "name": "restart",
+            }
+          }
+        }
+      },
       "actions": {
         "Bush": {
           "name": "Inspect bush",

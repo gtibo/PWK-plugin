@@ -226,14 +226,9 @@ boot_splash/use_filter=false
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
 
-[display]
-
-window/size/width=1920
-window/size/height=1080
-
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/PWK/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/PWK/plugin.cfg", "res://addons/vpainter/plugin.cfg" )
 
 [input]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://demos/home/game_info.gd" type="Script" id=1]
-[ext_resource path="res://watercolor_correction.png" type="Texture" id=2]
+[ext_resource path="res://main_background.png" type="Texture" id=2]
 [ext_resource path="res://addons/PWK/RedHatDisplay-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/PWK/RedHatDisplay-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/PWK/RedHatDisplay-Bold.ttf" type="DynamicFontData" id=5]
@@ -29,8 +29,8 @@ count_node = NodePath("VBoxContainer/PlayerCount")
 vignette_node = NodePath("Control/Vignette")
 
 [node name="Control" type="Control" parent="."]
-margin_right = 764.0
-margin_bottom = 1080.0
+margin_right = 406.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.4
@@ -43,16 +43,16 @@ expand = true
 stretch_mode = 7
 
 [node name="Space" type="Control" parent="."]
-margin_left = 768.0
-margin_right = 959.0
-margin_bottom = 1080.0
+margin_left = 410.0
+margin_right = 511.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 963.0
-margin_right = 1920.0
-margin_bottom = 1080.0
+margin_left = 515.0
+margin_right = 1024.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 alignment = 1
@@ -61,32 +61,32 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="VBoxContainer"]
-margin_top = 424.0
-margin_right = 957.0
-margin_bottom = 488.0
+margin_top = 135.0
+margin_right = 509.0
+margin_bottom = 199.0
 custom_fonts/font = SubResource( 1 )
 text = "Game title"
 
 [node name="Synopsis" type="Label" parent="VBoxContainer"]
-margin_top = 492.0
-margin_right = 957.0
-margin_bottom = 525.0
+margin_top = 203.0
+margin_right = 509.0
+margin_bottom = 272.0
 custom_fonts/font = SubResource( 2 )
 text = "Desmond's desire for his favorite dish will take him on a strange journey."
 autowrap = true
 
 [node name="Technical" type="Label" parent="VBoxContainer"]
-margin_top = 529.0
-margin_right = 957.0
-margin_bottom = 619.0
+margin_top = 276.0
+margin_right = 509.0
+margin_bottom = 428.0
 custom_fonts/font = SubResource( 3 )
 text = "This game illustrates the creative capabilities of the narrative system. It divides the story elements into acts, actors, dialogues, and actions. Presented in a headless format, the temporality, actions, and logic are accessible via a custom parser. "
 autowrap = true
 
 [node name="PlayerCount" type="Label" parent="VBoxContainer"]
-margin_top = 623.0
-margin_right = 957.0
-margin_bottom = 656.0
+margin_top = 432.0
+margin_right = 509.0
+margin_bottom = 465.0
 custom_fonts/font = SubResource( 2 )
 text = "1-2 Player"
 autowrap = true

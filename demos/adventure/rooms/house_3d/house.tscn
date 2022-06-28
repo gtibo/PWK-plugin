@@ -325,6 +325,7 @@ __meta__ = {
 }
 story_manager = ExtResource( 32 )
 event_name = "Intro"
+execute_on = "exited"
 
 [node name="CollisionShape" type="CollisionShape" parent="introEvent"]
 shape = SubResource( 27 )

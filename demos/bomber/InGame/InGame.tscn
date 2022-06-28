@@ -446,7 +446,7 @@ margin_bottom = 1481.0
 position = Vector2( -611, -304 )
 
 [node name="2" type="Position2D" parent="Spawns"]
-position = Vector2( -253, -398 )
+position = Vector2( -135, -1813 )
 
 [node name="3" type="Position2D" parent="Spawns"]
 position = Vector2( 780, -345 )
@@ -471,8 +471,10 @@ punch_scene = ExtResource( 10 )
 [node name="Players" type="Node2D" parent="."]
 
 [node name="cameraFollow" type="Camera2D" parent="."]
+current = true
 limit_bottom = 0
 limit_smoothed = true
+smoothing_enabled = true
 script = ExtResource( 1 )
 min_zoom = 0.8
 max_zoom = 4.0

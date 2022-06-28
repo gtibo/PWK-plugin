@@ -8,10 +8,9 @@ enum AxisKeys {
 	ArrowDown = KEY_DOWN,
 	A = KEY_A,
 	B = KEY_B,
-	C = KEY_C,
-	D = KEY_D,
-	E = KEY_E,
-	F = KEY_F,
+	X = KEY_X,
+	Y = KEY_Y,
+	SELECT = KEY_S,
 	}
 
 export(String, "keyboard", "joypad") var type = "joypad"
@@ -24,15 +23,16 @@ export(AxisKeys) var up = AxisKeys.ArrowUp
 export(AxisKeys) var down = AxisKeys.ArrowDown
 export(AxisKeys) var a_button = AxisKeys.A
 export(AxisKeys) var b_button = AxisKeys.B
-export(AxisKeys) var y_button = AxisKeys.C
-export(AxisKeys) var x_button = AxisKeys.D
+export(AxisKeys) var y_button = AxisKeys.Y
+export(AxisKeys) var x_button = AxisKeys.X
+export(AxisKeys) var select_button = AxisKeys.SELECT
 
 
 func _ready():
 	call("set_"+type)
 
 func set_keyboard():
-	var btn = {"a":a_button,"b":b_button,"y":y_button,"x":x_button, "left": left, "right": right, "up": up, "down": down}
+	var btn = {"a":a_button,"b":b_button,"y":y_button,"x":x_button,"select":select_button, "left": left, "right": right, "up": up, "down": down}
 	for k in btn:
 		var action_name = str(controller_index)+"_"+ k +"_button"
 		var env = InputEventKey.new()

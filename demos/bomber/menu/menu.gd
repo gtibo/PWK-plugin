@@ -50,7 +50,7 @@ func player_not_ready(i):
 	
 func _input(event):
 	if selection_locked: return
-	for i in range(3):
+	for i in range(4):
 		if Input.is_action_just_pressed(str(i)+"_a_button"):
 			player_joined(i)
 			

@@ -1,0 +1,23 @@
+[gd_resource type="Environment" load_steps=3 format=2]
+
+[ext_resource path="res://demos/adventure/HDRI/photo_studio_loft_hall_4k.hdr" type="Texture" id=1]
+
+[sub_resource type="PanoramaSky" id=67]
+panorama = ExtResource( 1 )
+
+[resource]
+background_mode = 3
+background_sky = SubResource( 67 )
+background_energy = 0.1
+fog_enabled = true
+fog_color = Color( 0.47451, 0.788235, 1, 1 )
+fog_depth_end = 40.0
+tonemap_mode = 2
+tonemap_exposure = 0.8
+tonemap_white = 1.2
+ssao_intensity = 0.2
+ssao_quality = 0
+dof_blur_far_distance = 6.1
+dof_blur_near_distance = 6.06
+glow_enabled = true
+glow_strength = 0.4

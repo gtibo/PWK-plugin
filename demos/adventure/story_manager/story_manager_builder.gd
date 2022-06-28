@@ -20,8 +20,8 @@ func setup():
 	var file = File.new()
 	file.open(story_data_path, file.READ)
 	var text = file.get_as_text()
-	file.close()
 	story_data = JSON.parse(text).result
+	file.close()
 	current_location = story_data.start
 
 func get_variable(variable_name):
@@ -85,7 +85,7 @@ func play_stack(stack):
 			"set":
 				set_variable(step.variable, step.value)
 			"emit":
-				emit_signal("custom_signal", step.name, step.value)
+				emit_signal("custom_signal", step.name)
 			"location_change":
 				current_location = step.to
 				change_location(step.to, step.landmark)

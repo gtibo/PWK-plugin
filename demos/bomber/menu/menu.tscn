@@ -100,8 +100,8 @@ __meta__ = {
 
 [node name="Logo" type="TextureRect" parent="MenuScreen/VBoxContainer"]
 material = SubResource( 6 )
-margin_right = 606.0
-margin_bottom = 174.0
+margin_right = 1138.0
+margin_bottom = 319.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
@@ -110,9 +110,9 @@ expand = true
 stretch_mode = 6
 
 [node name="PlayerDisplay" type="HBoxContainer" parent="MenuScreen/VBoxContainer"]
-margin_top = 190.0
-margin_right = 606.0
-margin_bottom = 470.0
+margin_top = 335.0
+margin_right = 1138.0
+margin_bottom = 846.0
 grow_horizontal = 2
 size_flags_horizontal = 7
 size_flags_vertical = 3
@@ -144,8 +144,8 @@ custom_constants/margin_bottom = 32
 [node name="TextureRect" type="TextureRect" parent="ControlScreen/MarginContainer"]
 margin_left = 32.0
 margin_top = 32.0
-margin_right = 834.0
-margin_bottom = 424.0
+margin_right = 1730.0
+margin_bottom = 904.0
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6

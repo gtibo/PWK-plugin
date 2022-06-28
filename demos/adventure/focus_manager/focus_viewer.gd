@@ -24,6 +24,7 @@ func activate():
 	
 func desactivate():
 	active = false
+	if main_focus_manager.current_zone_name == null: return
 	$AnimationPlayer.play_backwards("open")
 	
 func on_focus(zone_name):

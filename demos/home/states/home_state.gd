@@ -8,5 +8,5 @@ func handle_input(_event):
 		state_machine.transition_to("Selection")
 
 func enter(_msg := {}):
-	owner.set_actions([["a","Play"], ["y","Info"]], Color.black)
+	owner.set_actions([["a","Play"]], Color.black)
 	bg.show()
