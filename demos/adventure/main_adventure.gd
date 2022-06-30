@@ -36,7 +36,6 @@ func load_scene(scene_name, spawn_name):
 		yield($UI/Tween, "tween_completed")
 		for child in $SceneHolder.get_children():
 			child.queue_free()
-		yield(get_tree(), "idle_frame")
 	var scene = known_locations[scene_name].scene.instance()
 	$SoundTrack.stream = known_locations[scene_name].theme
 	$SoundTrack.play()
@@ -45,6 +44,7 @@ func load_scene(scene_name, spawn_name):
 	var player = player_scene.instance()
 	$SceneHolder.add_child(player)
 	emit_signal("location_changed")
+	
 	var spawn_position = landmark_manager.get_landmark(spawn_name).get_position()
 	player.translation = spawn_position
 	# Open animation

@@ -244,6 +244,7 @@ known_sfx = [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ) ]
 
 [node name="JoyMap" type="Node" parent="."]
 script = ExtResource( 1 )
+type = "keyboard"
 
 [node name="JoyMap2" type="Node" parent="."]
 script = ExtResource( 1 )

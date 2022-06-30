@@ -31,6 +31,7 @@ anchor_bottom = 1.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( -532, -269 )
 frames = SubResource( 4 )
+frame = 2
 playing = true
 centered = false
 

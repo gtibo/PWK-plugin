@@ -150,7 +150,7 @@ surfaces/0 = {
 "vertex_count": 4225
 }
 
-[sub_resource type="SphereShape" id=65]
+[sub_resource type="SphereShape" id=67]
 radius = 1.29862
 
 [node name="Spatial" type="Spatial"]
@@ -358,7 +358,7 @@ event_name = "outro"
 execute_on = "exited"
 
 [node name="CollisionShape" type="CollisionShape" parent="OutroEvent"]
-shape = SubResource( 65 )
+shape = SubResource( 67 )
 
 [connection signal="body_entered" from="Bush/Area" to="Bush" method="_on_Area_body_entered"]
 [connection signal="body_exited" from="Bush/Area" to="Bush" method="_on_Area_body_exited"]

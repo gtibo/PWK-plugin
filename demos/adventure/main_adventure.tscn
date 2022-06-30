@@ -1,8 +1,9 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://demos/adventure/main_adventure.gd" type="Script" id=1]
 [ext_resource path="res://demos/adventure/storyManager.tres" type="Resource" id=2]
 [ext_resource path="res://demos/adventure/locations/house_data.tres" type="Resource" id=3]
+[ext_resource path="res://demos/adventure/story_manager_parser.gd" type="Script" id=4]
 [ext_resource path="res://demos/adventure/player/player_actor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://demos/adventure/focus_manager/focus_manager.tres" type="Resource" id=6]
 [ext_resource path="res://demos/adventure/focus_manager/focus_viewer.tscn" type="PackedScene" id=7]
@@ -10,6 +11,7 @@
 [ext_resource path="res://demos/adventure/minigameDisplay.gd" type="Script" id=9]
 [ext_resource path="res://demos/adventure/locations/outside_data.tres" type="Resource" id=10]
 [ext_resource path="res://demos/adventure/sounds/soundtrack/lazy_morning.wav" type="AudioStream" id=11]
+[ext_resource path="res://demos/adventure/dialogueManager.tres" type="Resource" id=12]
 [ext_resource path="res://demos/adventure/textures/broken_glass.jpg" type="Texture" id=13]
 [ext_resource path="res://demos/adventure/mini_game/mini_game_manager.tres" type="Resource" id=14]
 [ext_resource path="res://demos/adventure/mini_game/rythm_game_data.tres" type="Resource" id=15]
@@ -141,6 +143,14 @@ landmark_manager = ExtResource( 17 )
 [node name="ActorFetcher" type="Node" parent="."]
 script = ExtResource( 18 )
 known_actors = [ ExtResource( 21 ), ExtResource( 20 ), ExtResource( 22 ), ExtResource( 24 ) ]
+actor_manager = ExtResource( 23 )
+
+[node name="story_manager_parser" type="Node" parent="."]
+script = ExtResource( 4 )
+story_manager = ExtResource( 2 )
+dialogue_manager = ExtResource( 12 )
+mini_game_manager = ExtResource( 14 )
+navigation_manager = ExtResource( 19 )
 actor_manager = ExtResource( 23 )
 
 [node name="CameraSystem" type="Spatial" parent="."]
